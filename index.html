@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Name</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/45ce289f06.js" crossorigin="anonymous"></script>
+  <script src="app.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+              <img src="path/to/logo.png" alt="School Logo" width="30" height="30">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Inicio</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Nosotros</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Nivel Educativos</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Galleria</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Contact</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </header>
+      
+  <main>
+    <section class="hero-section">
+        <div class="hero-image">
+          <img src="images/salones.jpg" alt="School Image" class="img-fluid">
+        </div>
+        <div class="overlay-content">
+          <h1>Welcome to Our School</h1>
+          <p>Enter your email address to stay updated with our latest news and events.</p>
+          <form action="submit_form_url" method="POST">
+            <div class="input-group mb-3">
+              <input type="email" class="form-control" placeholder="Email" name="email" required>
+              <button class="btn btn-primary" type="submit">Subscribe</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="oval-cards-section">
+        <div>
+          <div class="banner text-center">
+            <h2>Nivel Educativos</h2>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card oval-card">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Nursery</h5>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card oval-card">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Kinder</h5>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card oval-card">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Primaria</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+      <section class="content-section">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+              <h2>About Our School</h2>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In euismod quam ac tristique mollis. Duis in dolor eget augue consequat laoreet.</p>
+              <p>Proin ultricies, urna vel ullamcorper imperdiet, purus ante consequat lacus, id tincidunt mi purus et odio. Sed feugiat velit id velit suscipit euismod.</p>
+              <p>Donec dapibus nunc sit amet elementum semper. Duis faucibus ullamcorper odio, vitae venenatis sapien bibendum eget. Etiam fringilla urna ac enim sollicitudin.</p>
+            </div>
+            <div class="col-md-6 d-flex justify-content-center">
+                <div class="video-container">
+                  <div class="embed-responsive embed-responsive-16by9">
+                    <!-- <iframe class="embed-responsive-item" src="https://www.youtube.com/watch?v=Br-rP0tQnuE" allowfullscreen></iframe> -->
+                    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/Br-rP0tQnuE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      <section class="cards-section">
+        <div class="container">
+          <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body text-center">
+                  <i class="fas fa-flag icon"></i>
+                  <h5 class="card-title">Mission</h5>
+                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In euismod quam ac tristique mollis.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body text-center">
+                  <i class="fas fa-eye icon"></i>
+                  <h5 class="card-title">Vision</h5>
+                  <p class="card-text">Proin ultricies, urna vel ullamcorper imperdiet, purus ante consequat lacus, id tincidunt mi purus et odio.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body text-center">
+                  <i class="fas fa-heart icon"></i>
+                  <h5 class="card-title">Values</h5>
+                  <p class="card-text">Donec dapibus nunc sit amet elementum semper. Duis faucibus ullamcorper odio, vitae venenatis sapien bibendum eget.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section class="carousel-section">
+        <div class="container">
+          <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img src="https://via.placeholder.com/900x300"class="d-block w-100" alt="Image description 1">
+              </div>
+              <div class="carousel-item">
+                <img src="https://via.placeholder.com/900x300" class="d-block w-100" alt="Image description 2">
+              </div>
+              <div class="carousel-item">
+                <img src="https://via.placeholder.com/900x300" class="d-block w-100" alt="Image description 3">
+              </div>
+              <div class="carousel-item">
+                <img src="https://via.placeholder.com/900x300"class="d-block w-100" alt="Image description 4">
+              </div>
+              <div class="carousel-item">
+                <img src="https://via.placeholder.com/900x300" class="d-block w-100" alt="Image description 5">
+              </div>
+              <div class="carousel-item">
+                <img src="https://via.placeholder.com/900x300" class="d-block w-100" alt="Image description 6">
+              </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+      </section>
+      
+      
+      
+      <section class="gallery-section">
+        <div class="container">
+            <div class="text-center">
+                <h1>Galleria</h1>
+              </div>
+          <div class="row gallery-row">
+            <!-- Add 10 placeholder images with the 'gallery-item' class -->
+            <div class="col-md-4 col-lg-3 gallery-item">
+              <img src="galleri_images/pexels-artem-podrez-8087930.jpg" alt="Placeholder image 1">
+            </div>
+            <!-- Add more placeholder images... -->
+            <div class="col-md-4 col-lg-3 gallery-item">
+                <img src="galleri_images/pexels-julia-m-cameron-4145354.jpg" alt="Placeholder image 2">
+              </div>
+              <!-- Add more placeholder images... -->
+            <div class="col-md-4 col-lg-3 gallery-item">
+                <img src="galleri_images/pexels-katerina-holmes-5905918.jpg" alt="Placeholder image 3">
+              </div>
+               <!-- Add more placeholder images... -->
+            <div class="col-md-4 col-lg-3 gallery-item">
+                <img src="galleri_images/pexels-ksenia-chernaya-8535230.jpg" alt="Placeholder image 4">
+              </div>
+               <!-- Add more placeholder images... -->
+            <div class="col-md-4 col-lg-3 gallery-item">
+                <img src="galleri_images/pexels-max-fischer-5212345.jpg" alt="Placeholder image 5">
+              </div>
+               <!-- Add more placeholder images... -->
+            <div class="col-md-4 col-lg-3 gallery-item">
+                <img src="galleri_images/pexels-naomi-shi-1001914.jpg" alt="Placeholder image 6">
+              </div>
+               <!-- Add more placeholder images... -->
+            <div class="col-md-4 col-lg-3 gallery-item">
+                <img src="galleri_images/pexels-natalie-bond-3913426.jpg" alt="Placeholder image 7">
+              </div>
+               <!-- Add more placeholder images... -->
+            <div class="col-md-4 col-lg-3 gallery-item">
+                <img src="galleri_images/pexels-pixabay-256395.jpg" alt="Placeholder image 8">
+              </div>
+               <!-- Add more placeholder images... -->
+            <div class="col-md-4 col-lg-3 gallery-item">
+                <img src="galleri_images/pexels-pixabay-289737.jpg" alt="Placeholder image 9">
+              </div>
+               <!-- Add more placeholder images... -->
+            <div class="col-md-4 col-lg-3 gallery-item">
+                <img src="galleri_images/pexels-rodnae-productions-8364026.jpg" alt="Placeholder image 10">
+              </div>
+               <!-- Add more placeholder images... -->
+            <div class="col-md-4 col-lg-3 gallery-item">
+                <img src="galleri_images/pexels-yan-krukau-8612990.jpg" alt="Placeholder image 11">
+              </div>
+               <!-- Add more placeholder images... -->
+            <div class="col-md-4 col-lg-3 gallery-item">
+                <img src="galleri_images/pexels-yan-krukau-8613054.jpg" alt="Placeholder image 12">
+              </div> 
+          </div>
+        </div>
+      </section>
+      
+      <section class="contact-section">
+        <div class="container">
+            <div class="text-center">
+                <h2>Contact Us</h2>
+              </div>
+          <div class="row">
+            <div class="col-md-6">
+              <!-- Google Maps embed -->
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.8354348106176!2d144.95373531550472!3d-37.81720997975171!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad642af0f11fd81%3A0x5045675218ce6e0!2sMelbourne%20Victoria%2C%20Australia!5e0!3m2!1sen!2sus!4v1612948389826!5m2!1sen!2sus" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            </div>
+            <div class="col-md-6">
+              <!-- Contact form -->
+              <form action="contact-form-handler.php" method="post">
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                  <label for="message">Message</label>
+                  <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+    
+  </main>
+  <!-- Add these lines right before the closing tag -->
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>

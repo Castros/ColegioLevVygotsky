@@ -1,0 +1,180 @@
+/* Add this to your 'styles.css' file or in the <style> tag in the head section of your HTML file */
+
+.navbar {
+    background-color:#36955E;
+  }
+  
+.navbar.sticky-top {
+    z-index: 1030;
+  }
+  
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+      text-align: center;
+    }
+  
+    .navbar-nav {
+      display: inline-block;
+      float: none;
+     
+    }
+  }
+
+/* Add this to your 'styles.css' file or in the <style> tag in the head section of your HTML file */
+
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+
+  }
+  
+  .hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+  }
+  
+  .overlay-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    text-align: center;
+    max-width: 80%;
+  }
+  
+  .overlay-content input[type=email] {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  
+  @media (max-width: 767.98px) {
+    .overlay-content {
+      width: 100%;
+      padding: 2rem;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  .content-section {
+    padding: 3rem 0;
+  }
+/* Add this to your 'styles.css' file or in the <style> tag in the head section of your HTML file */
+
+.video-container {
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    position: relative;
+  }
+  
+  .embed-responsive-16by9 {
+    position: absolute;
+    top: 0;
+  }  
+
+  .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-body {
+    flex-grow: 1;
+  }
+
+  .cards-section {
+    padding: 3rem 0;
+  }
+  
+  .icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Add this to your 'styles.css' file or in the <style> tag in the head section of your HTML file */
+
+.carousel-section {
+    padding: 3rem 0;
+  }
+  
+  .carousel {
+    max-width: 600px; /* Change this value to set the desired width of the carousel */
+    margin: 0 auto;
+  }
+
+  /* Add this to your 'styles.css' file or in the <style> tag in the head section of your HTML file */
+
+/* Add this to your 'styles.css' file or in the <style> tag in the head section of your HTML file */
+
+/* Add this to your 'styles.css' file or in the <style> tag in the head section of your HTML file */
+
+.oval-cards-section {
+    padding: 3rem 0;
+  }
+  
+  .banner {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #f8f9fa; /* Change this value to set the desired background color for the banner */
+    border-radius: 10px;
+  }
+  
+  .card.oval-card {
+    border-radius: 50%;
+    width: 200px; /* Adjust this value to change the width of the oval cards */
+    height: 200px; /* Adjust this value to change the height of the oval cards */
+    margin: 0 auto; /* Center the card in the column */
+  }
+  
+  @media (max-width: 767px) {
+    .card.oval-card {
+      margin-bottom: 2rem;
+    }
+  }
+  
+  /* Add this to your 'styles.css' file or in the <style> tag in the head section of your HTML file */
+
+/* Add this to your 'styles.css' file or in the <style> tag in the head section of your HTML file */
+/* Add this to your 'styles.css' file or in the <style> tag in the head section of your HTML file */
+
+.gallery-title {
+    margin-bottom: 2rem;
+  }
+  
+  /* Other gallery-related CSS rules... */
+  
+.gallery-section {
+    padding: 3rem 0;
+  }
+  
+  .gallery-item {
+    padding: 0.5rem; /* Adjust this value to change the space between the images */
+  }
+  
+  .gallery-item img {
+    width: 100%;
+    height: auto;
+  }
+  
+  @media (max-width: 991px) {
+    .gallery-item {
+      display: none;
+    }
+  
+    .gallery-item.visible-xs {
+      display: block;
+    }
+  }
+  
