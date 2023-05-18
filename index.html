@@ -231,8 +231,10 @@
             </div>
             <div class="col-md-6">
               <!-- Contact form -->
-              <form action="contact-form-handler.php" method="post">
+              <form id="contact-form" action="contact-form-handler.php" method="post">
                 <div class="form-group">
+                  <div id="success-message" class="hidden">Your message has been sent successfully!</div>
+                  <div id="failure-message" class="hidden">Oops! There was an issue sending your message. Please try again.</div>
                   <label for="name">Name</label>
                   <input type="text" class="form-control" id="name" name="name" required>
                 </div>

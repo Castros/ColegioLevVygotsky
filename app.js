@@ -41,4 +41,25 @@ function shuffleGalleryItems() {
     });
   });
   
-  
+  // Contact form for Success and Failure
+  $(document).ready(function() {
+    $('#contact-form').on('submit', function(e) {
+      e.preventDefault();//prevent form submission
+
+      $.aja({
+        url : $(this).attr('action'),//contact.php
+        type: $(this).attr('action'),//post
+        data: $(this).serialize(),//form data
+        success: function(data){
+          if(data == 'success') {
+            $('#success-message').removeClass('hidden');
+          } else {
+            $('#failure-message').removeClass('hidden');
+          }
+        },
+        error: function() {
+          $('failure-message').removeClass('hidden');
+        }
+      });
+    });
+  });

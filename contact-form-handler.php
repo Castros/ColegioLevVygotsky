@@ -23,3 +23,10 @@
   mail($recipient, $subject, $email_content, $email_headers);
 
   // Redirect to
+  if(mail($recipient, $subject, $email_content, $email_headers)) {
+    // On successful email send, return success
+    echo 'success';
+} else {
+    // On failure, return failure
+    echo 'failure';
+}
