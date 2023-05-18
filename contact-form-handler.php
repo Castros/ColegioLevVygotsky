@@ -1,7 +1,7 @@
 <?php
   // Replace these with your own email address and site domain
   $recipient = "castrostech@gmail.com";
-  $site_domain = "vigotskyreynosa.edu.mx";
+  $site_domain = "dev.vigotskyreynosa.edu.mx";
 
   // Set the email subject
   $subject = "Contact form submission from " . $site_domain;
