@@ -1,4 +1,19 @@
-// Add this to your 'scripts.js' file or in the <script> tag at the end of the body section of your HTML file
+// Variables for the javascript file
+const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+
+
+
+
+
+
+window.addEventListener('scroll', function() {
+  const navbar = document.querySelector('.transparent-navbar');
+  if (window.scrollY > 50) {
+    navbar.style.backgroundColor = primaryColor;
+  } else {
+    navbar.style.backgroundColor = 'transparent';
+  }
+});
 
 function shuffleGalleryItems() {
     const galleryRow = document.querySelector(".gallery-row");

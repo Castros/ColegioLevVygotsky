@@ -17,4 +17,4 @@ jobs:
         server: 
         username: ${{ secrets.ftp_username}}
         password: ${{ secrets.ftp_password }}
-        server-dir: /
+        server-dir: /dev.vigotskyreynosa.edu.mx/

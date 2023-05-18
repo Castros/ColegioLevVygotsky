@@ -6,12 +6,24 @@
   --accent-color2: #7F9A7C;
   --accent-color3: #E0A32D;
 
-  /* Add more variables as needed */
+
 }
+
+.highlight-text {
+  color: whitesmoke;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  
+}
+
 
 .navbar {
   background-color: var(--primary-color);
   }
+
+  .transparent-navbar {
+    background-color: transparent;
+    transition: background-color 0.3s;
+  } 
   
 .navbar.sticky-top {
     z-index: 1030;
@@ -39,6 +51,7 @@
       float: none;
      
     }
+
   }
 
 /* Add this to your 'styles.css' file or in the <style> tag in the head section of your HTML file */
@@ -80,13 +93,24 @@
   .overlay-content input[type=email] {
     background-color: rgba(255, 255, 255, 0.9);
   }
+
+  .nivel-text{
+    color: var(--accent-color3);
+  }
   
   @media (max-width: 767.98px) {
+    .nav-mobile{
+      padding-right: 25px;
+    }
     .overlay-content {
       width: 100%;
       padding: 2rem;
       background-color: rgba(0, 0, 0, 0.5);
     }
+    .logo-image{
+      padding-left: 10px;
+    }
+    
   }
 .oval-cards-section,
 .banner-bg,
