@@ -4,18 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>School Name</title>
-  <link rel="stylesheet" href="style.css">
+  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=1.0.1">
   <script src="https://kit.fontawesome.com/45ce289f06.js" crossorigin="anonymous"></script>
-  <script src="app.js" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="app.js?v=1.0.1" crossorigin="anonymous"></script>
 
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <nav class="navbar fixed-top navbar-expand-lg navbar-custom navbar-light">
           <div class="container-fluid">
             <a class="navbar-brand" href="#">
-              <img src="path/to/logo.png" alt="School Logo" width="30" height="30">
+              <img class="rounded-3" src="/images/clv_logo.jpeg" width="60" length="60">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
@@ -49,45 +51,51 @@
           <img src="images/salones.jpg" alt="School Image" class="img-fluid">
         </div>
         <div class="overlay-content">
-          <h1>Welcome to Our School</h1>
-          <p>Enter your email address to stay updated with our latest news and events.</p>
-          <form action="submit_form_url" method="POST">
-            <div class="input-group mb-3">
-              <input type="email" class="form-control" placeholder="Email" name="email" required>
-              <button class="btn btn-primary" type="submit">Subscribe</button>
-            </div>
-          </form>
+          <h1>Bienvenido al Colegio Vitsokky</h1>
+          <p>Ponte en contacto con nosotros y conoce nuestro sistema bilingüe.</p>
+          <button class="btn btn-primary contact-btn btn-lg">Contact Us</button>
+
         </div>
       </section>
 
       <section class="oval-cards-section">
         <div>
-          <div class="banner text-center">
+          <div class="banner text-center banner-bg">
             <h2>Nivel Educativos</h2>
           </div>
           <div class="row">
             <div class="col-md-4">
-              <div class="card oval-card">
+              <div class="card oval-card no-border">
                 <div class="card-body text-center">
-                  <h5 class="card-title">Nursery</h5>
+                  <div class="image-overlay">
+                    <img src="galleri_images/pexels-rodnae-productions-8364026.jpg" alt="Nursery" />
+                    <h5 class="card-title fs-2">Nursery</h5>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="col-md-4">
-              <div class="card oval-card">
+              <div class="card oval-card no-border">
                 <div class="card-body text-center">
-                  <h5 class="card-title">Kinder</h5>
+                  <div class="image-overlay">
+                    <img src="galleri_images/pexels-yan-krukau-8613054.jpg" alt="Kinder" />
+                    <h5 class="card-title fs-2">Kinder</h5>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="col-md-4">
-              <div class="card oval-card">
+              <div class="card oval-card no-border">
                 <div class="card-body text-center">
-                  <h5 class="card-title">Primaria</h5>
+                  <div class="image-overlay">
+                    <img src="galleri_images/pexels-max-fischer-5212345.jpg" alt="Primaria" />
+                    <h5 class="card-title fs-2">Primaria</h5>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          
         </div>
       </section>
 
@@ -123,7 +131,7 @@
                 <div class="card-body text-center">
                   <i class="fas fa-flag icon"></i>
                   <h5 class="card-title">Mission</h5>
-                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In euismod quam ac tristique mollis.</p>
+                  <p class="card-text">Nuestra mision es educar integramente y con excelencia, ofreciendo programas bilingues y una solida formacion moral basada en principios que contribuyan a desarrollar personas de bien capaces de mejorar su entorno.</p>
                 </div>
               </div>
             </div>
@@ -132,7 +140,7 @@
                 <div class="card-body text-center">
                   <i class="fas fa-eye icon"></i>
                   <h5 class="card-title">Vision</h5>
-                  <p class="card-text">Proin ultricies, urna vel ullamcorper imperdiet, purus ante consequat lacus, id tincidunt mi purus et odio.</p>
+                  <p class="card-text">Ser una institucion educativa de excelencia academica, acreditable a nivel regional susyentada en una infraestructura y tecnologia de vanguardia con personal actualizado y comprometido con la mejora continue, formando egresados con altas competencias en conocimientos, actitudes y sobretodo valores para enfrentar con exit la vida.</p>
                 </div>
               </div>
             </div>
@@ -140,8 +148,8 @@
               <div class="card">
                 <div class="card-body text-center">
                   <i class="fas fa-heart icon"></i>
-                  <h5 class="card-title">Values</h5>
-                  <p class="card-text">Donec dapibus nunc sit amet elementum semper. Duis faucibus ullamcorper odio, vitae venenatis sapien bibendum eget.</p>
+                  <h5 class="card-title">Sistem Bilingue</h5>
+                  <p class="card-text">Ofrecemos una herramienta vital para el exito academico y profesional ya que propicia el desarrollo de las habilidades del pensamiento paralemente a la adquisicion de las habilidades comunicativas lectura, escritura, comprension auditiva expresion oral en el aprendizaje del idioma ingles.</p>
                 </div>
               </div>
             </div>
@@ -244,7 +252,7 @@
         </div>
       </section>
       
-      <section class="contact-section">
+      <section class="contact-section" id="contact-form-section">
         <div class="container">
             <div class="text-center">
                 <h2>Contact Us</h2>
@@ -278,8 +286,26 @@
       
     
   </main>
+
+  <footer class="bg-dark text-center text-white py-3 mt-4">
+    <div class="container">
+      <div class="d-flex justify-content-center mb-3">
+        <a href="https://www.facebook.com" target="_blank" class="mx-2">
+          <i class="fab fa-facebook-f fa-2x"></i>
+        </a>
+        <a href="https://www.instagram.com" target="_blank" class="mx-2">
+          <i class="fab fa-instagram fa-2x"></i>
+        </a>
+        <a href="https://www.youtube.com" target="_blank" class="mx-2">
+          <i class="fab fa-youtube fa-2x"></i>
+        </a>
+      </div>
+      <p class="mb-0 pb-2">&copy; 2023 Colegio Vitsokky. All rights reserved.</p>
+    </div>
+  </footer>
+  
   <!-- Add these lines right before the closing tag -->
-<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 

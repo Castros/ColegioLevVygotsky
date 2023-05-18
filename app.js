@@ -14,4 +14,16 @@ function shuffleGalleryItems() {
   
   window.addEventListener("DOMContentLoaded", shuffleGalleryItems);
   window.addEventListener("resize", shuffleGalleryItems);
+
+  $(document).ready(function () {
+    $(".contact-btn").click(function () {
+      $("html, body").animate(
+        {
+          scrollTop: $("#contact-form-section").offset().top,
+        },
+        1000
+      );
+    });
+  });
+  
   
