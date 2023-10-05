@@ -44,22 +44,25 @@ function shuffleGalleryItems() {
   // Contact form for Success and Failure
   $(document).ready(function() {
     $('#contact-form').on('submit', function(e) {
-      e.preventDefault();//prevent form submission
+        e.preventDefault(); //prevent form submission
 
-      $.aja({
-        url : $(this).attr('action'),//contact.php
-        type: $(this).attr('action'),//post
-        data: $(this).serialize(),//form data
-        success: function(data){
-          if(data == 'success') {
-            $('#success-message').removeClass('hidden');
-          } else {
-            $('#failure-message').removeClass('hidden');
-          }
-        },
-        error: function() {
-          $('failure-message').removeClass('hidden');
-        }
-      });
+        $.ajax({
+            url: $(this).attr('action'), //contact.php
+            type: 'POST', //post
+            data: $(this).serialize(), //form data
+            success: function(data) {
+                if (data == 'success') {
+                    $('#success-message').removeClass('hidden');
+                    $('#failure-message').addClass('hidden'); // Hide the failure message in case it was shown before
+                } else {
+                    $('#failure-message').removeClass('hidden');
+                    $('#success-message').addClass('hidden'); // Hide the success message in case it was shown before
+                }
+            },
+            error: function() {
+                $('#failure-message').removeClass('hidden');
+                $('#success-message').addClass('hidden'); // Hide the success message in case of an error
+            }
+        });
     });
-  });
+});
