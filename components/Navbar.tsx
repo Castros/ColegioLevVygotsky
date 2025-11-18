@@ -64,7 +64,6 @@ export default function Navbar() {
                   className={`block px-4 py-3 hover:bg-green-50 hover:text-green-700 text-slate-700 transition font-medium ${index === 0 ? 'rounded-t-lg' : ''} ${index === niveles.length - 1 ? 'rounded-b-lg' : ''}`}
                 >
                   {nivel.name}
-                  <span className="block text-xs text-slate-500">{nivel.ageRange}</span>
                 </Link>
               ))}
             </div>
@@ -126,7 +125,6 @@ export default function Navbar() {
                         className="block py-2 px-3 text-sm text-slate-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition"
                       >
                         {nivel.name}
-                        <span className="block text-xs text-slate-500">{nivel.ageRange}</span>
                       </Link>
                     ))}
                   </div>

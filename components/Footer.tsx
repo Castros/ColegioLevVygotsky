@@ -17,7 +17,7 @@ export default function Footer() {
     { name: "Preescolar", href: "/servicios/preescolar" },
     { name: "Primaria", href: "/servicios/primaria" },
     { name: "Secundaria", href: "/servicios/secundaria" },
-    { name: "Preparatoria", href: "/servicios/preparatoria" },
+    { name: "Bolsa de Trabajo", href: "/bolsa-de-trabajo" },
   ];
 
   return (
