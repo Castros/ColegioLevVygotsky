@@ -8,8 +8,24 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* Typography - matching original WordPress site */
+  --font-sans: var(--font-lato);
+  --font-heading: var(--font-montserrat);
+
+  /* Font sizes matching original site */
+  --font-size-base: 17px;
+  --font-size-p: 15px;
+  --font-size-h1: 64px;
+  --font-size-h2: 46px;
+  --font-size-h3: 24px;
+
+  /* Line heights matching original site */
+  --line-height-base: 1.6;
+  --line-height-p: 1.8;
+  --line-height-h1: 1.4;
+  --line-height-h2: 1.2;
+  --line-height-h3: 1.2;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +38,32 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-lato), sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 64px;
+  line-height: 1.4;
+}
+
+h2 {
+  font-size: 46px;
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+p {
+  font-size: 15px;
+  line-height: 1.8;
 }
