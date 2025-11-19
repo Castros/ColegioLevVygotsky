@@ -97,7 +97,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
   try {
     // Use local JSON file for development
     const blogPostsData = await import('@/data/blog-posts.json');
-    return blogPostsData.default || [];
+    return (blogPostsData.default || []) as BlogPost[];
   } catch (error) {
     console.error('Error fetching blog posts:', error);
     return [];
@@ -112,7 +112,7 @@ export async function getBlogPostsByCategory(category: string): Promise<BlogPost
   try {
     // Use local JSON file for development
     const blogPostsData = await import('@/data/blog-posts.json');
-    const posts = blogPostsData.default || [];
+    const posts = (blogPostsData.default || []) as BlogPost[];
     return posts.filter((post: BlogPost) => post.category === category);
   } catch (error) {
     console.error('Error fetching blog posts by category:', error);
@@ -128,7 +128,7 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
   try {
     // Use local JSON file for development
     const blogPostsData = await import('@/data/blog-posts.json');
-    const posts = blogPostsData.default || [];
+    const posts = (blogPostsData.default || []) as BlogPost[];
     return posts.find((post: BlogPost) => post.slug === slug) || null;
   } catch (error) {
     console.error('Error fetching blog post:', error);
