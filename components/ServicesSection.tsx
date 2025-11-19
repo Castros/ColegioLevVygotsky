@@ -63,7 +63,7 @@ export default function ServicesSection() {
                   href={service.link}
                   className="inline-block text-green-600 hover:text-green-700 font-semibold text-sm uppercase tracking-wide transition-colors"
                 >
-                  LEARN MORE
+                  VER MÁS
                 </Link>
               </div>
             ))}

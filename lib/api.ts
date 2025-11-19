@@ -3,7 +3,7 @@
  */
 
 import { fetchAPI } from './strapi';
-import type { Homepage, Gallery, Testimonial, Page } from './types';
+import type { Homepage, Gallery, Testimonial, Page, BlogPost } from './types';
 
 /**
  * Get homepage data (single type)
@@ -85,6 +85,53 @@ export async function getPageBySlug(slug: string): Promise<Page | null> {
     return pages?.[0] || null;
   } catch (error) {
     console.error('Error fetching page:', error);
+    return null;
+  }
+}
+
+/**
+ * Get all blog posts
+ * Strapi v3 endpoint: /blog-posts
+ */
+export async function getBlogPosts(): Promise<BlogPost[]> {
+  try {
+    // Use local JSON file for development
+    const blogPostsData = await import('@/data/blog-posts.json');
+    return blogPostsData.default || [];
+  } catch (error) {
+    console.error('Error fetching blog posts:', error);
+    return [];
+  }
+}
+
+/**
+ * Get blog posts by category
+ * Strapi v3 endpoint: /blog-posts?category=Academics
+ */
+export async function getBlogPostsByCategory(category: string): Promise<BlogPost[]> {
+  try {
+    // Use local JSON file for development
+    const blogPostsData = await import('@/data/blog-posts.json');
+    const posts = blogPostsData.default || [];
+    return posts.filter((post: BlogPost) => post.category === category);
+  } catch (error) {
+    console.error('Error fetching blog posts by category:', error);
+    return [];
+  }
+}
+
+/**
+ * Get a single blog post by slug
+ * Strapi v3 endpoint: /blog-posts?slug=example-slug
+ */
+export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+  try {
+    // Use local JSON file for development
+    const blogPostsData = await import('@/data/blog-posts.json');
+    const posts = blogPostsData.default || [];
+    return posts.find((post: BlogPost) => post.slug === slug) || null;
+  } catch (error) {
+    console.error('Error fetching blog post:', error);
     return null;
   }
 }

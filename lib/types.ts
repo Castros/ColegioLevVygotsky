@@ -84,3 +84,18 @@ export interface Page {
   updated_at: string;
   published_at: string;
 }
+
+export interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  featured_image: StrapiImage;
+  category: 'Academics' | 'Student Life' | 'School Events' | 'Alumni News' | 'Teacher Spotlights';
+  published_date: string;
+  author?: string;
+  created_at: string;
+  updated_at: string;
+  published_at: string;
+}

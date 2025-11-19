@@ -92,17 +92,18 @@ export default function ContactPage() {
                 <div className="w-16 h-1 bg-green-600"></div>
               </div>
 
-              {/* Map Placeholder - TODO: Add actual Google Maps embed */}
-              <div className="w-full h-[500px] bg-slate-200 rounded-2xl overflow-hidden shadow-lg flex items-center justify-center">
-                <div className="text-center p-8">
-                  <FaMapMarkerAlt className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-                  <p className="text-slate-600 font-semibold">
-                    Mapa de Google Maps
-                  </p>
-                  <p className="text-slate-500 text-sm mt-2">
-                    (Por agregar coordenadas)
-                  </p>
-                </div>
+              {/* Google Maps */}
+              <div className="w-full h-[500px] rounded-2xl overflow-hidden shadow-lg">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1791.8592520102459!2d-98.36072362627539!3d26.075454551296275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8665058add1dfced%3A0x8d748b063e65e551!2sColegio%20Lev%20Vygotsky!5e0!3m2!1sen!2smx!4v1763515642391!5m2!1sen!2smx"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen={true}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Ubicación de Colegio Lev Vygotsky"
+                />
               </div>
 
               {/* Opening Hours */}

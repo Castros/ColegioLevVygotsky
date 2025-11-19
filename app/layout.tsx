@@ -5,6 +5,7 @@ import TopBar from "@/components/TopBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StructuredData from "@/components/StructuredData";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -77,6 +78,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
+        <ScrollToTop />
       </body>
     </html>
   );
