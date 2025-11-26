@@ -1,8 +1,0 @@
-# robots.txt for vigotskyreynosa.edu.mx
-
-User-agent: *
-Allow: /
-Disallow: /api/
-
-# Sitemap location
-Sitemap: https://vigotskyreynosa.edu.mx/sitemap.xml
