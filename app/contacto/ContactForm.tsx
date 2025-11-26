@@ -29,9 +29,6 @@ export default function ContactForm() {
         <p className="text-sm font-semibold text-slate-600 uppercase tracking-wider mb-4">
           ENVÍANOS UN MENSAJE
         </p>
-        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-          ¿Tienes Alguna Pregunta?
-        </h2>
         <div className="w-16 h-1 bg-green-600"></div>
       </div>
 

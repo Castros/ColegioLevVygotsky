@@ -7,11 +7,11 @@ export default function TopBar() {
       <div className="container mx-auto flex justify-between items-center text-sm">
         {/* Phone Number */}
         <a
-          href="tel:+525589174-0031"
+          href="tel:+5289174-0031"
           className="flex items-center gap-2 hover:text-green-200 transition-colors"
         >
           <Phone size={16} />
-          <span>55 89 9174-0031</span>
+          <span>+52 899 174-0031</span>
         </a>
 
         {/* Social Media Links */}

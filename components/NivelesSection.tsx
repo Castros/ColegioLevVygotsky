@@ -18,7 +18,7 @@ export default function NivelesSection() {
         </h2>
         <div className="w-16 h-1 bg-green-600 mx-auto mb-12"></div>
 
-        <div className="flex flex-wrap justify-center gap-16 md:gap-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
           {niveles.map((nivel, index) => {
             return (
               <Link

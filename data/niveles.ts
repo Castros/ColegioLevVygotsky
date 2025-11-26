@@ -10,6 +10,19 @@ export interface Nivel {
 
 export const niveles: Nivel[] = [
   {
+    id: 'pre-kinder',
+    name: 'Pre-Kínder',
+    ageRange: '1 año y 6 meses - 3 años',
+    grades: 'Preescolar',
+    description: 'Primeros pasos en el aprendizaje con un enfoque en desarrollo sensorial, motricidad, y adaptación al ambiente escolar en un espacio amoroso y seguro.',
+    features: [
+      'Estimulación temprana y sensorial',
+      'Desarrollo de motricidad fina y gruesa',
+      'Socialización y adaptación escolar',
+      'Actividades de exploración y descubrimiento'
+    ]
+  },
+  {
     id: 'kinder',
     name: 'Kínder',
     ageRange: '3-6 años',

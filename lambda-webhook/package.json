@@ -1,0 +1,12 @@
+{
+  "name": "strapi-webhook-relay",
+  "version": "1.0.0",
+  "description": "AWS Lambda function to relay Strapi webhooks to GitHub Actions",
+  "main": "index.js",
+  "scripts": {
+    "package": "zip -r function.zip index.js package.json"
+  },
+  "dependencies": {},
+  "author": "",
+  "license": "MIT"
+}
