@@ -11,6 +11,11 @@ interface NivelContentProps {
 
 // Photo galleries for each nivel
 const nivelGalleries = {
+  "pre-kinder": [
+    "/images/gallery-kinder/kinder-1.png",
+    "/images/gallery-kinder/kinder-2.png",
+    "/images/gallery-kinder/kinder-3.png",
+  ],
   kinder: [
     "/images/gallery-kinder/kinder-1.png",
     "/images/gallery-kinder/kinder-2.png",
@@ -43,6 +48,7 @@ const nivelGalleries = {
 
 // Hero background images for each nivel
 const nivelHeroImages = {
+  "pre-kinder": "/images/hero-kinder-bg.png",
   kinder: "/images/hero-kinder-bg.png",
   primaria: "/images/hero-primaria-bg.jpg",
   secundaria: "/images/hero-secundaria-bg.jpg",
@@ -50,6 +56,48 @@ const nivelHeroImages = {
 
 // Content specific to each nivel
 const nivelData = {
+  "pre-kinder": {
+    promise: "Los Primeros Pasos en el Mundo del Aprendizaje",
+    promiseDescription: "En Pre-Kínder, acompañamos a los más pequeños en sus primeros pasos educativos, fomentando su desarrollo sensorial, motriz y socioemocional en un ambiente lleno de amor, cuidado y estímulo.",
+    developmentalAreas: [
+      {
+        title: "Estimulación Temprana y Sensorial",
+        description: "Actividades diseñadas para estimular todos los sentidos y promover el desarrollo cognitivo temprano"
+      },
+      {
+        title: "Desarrollo de Motricidad Fina y Gruesa",
+        description: "Ejercicios y juegos que fortalecen habilidades motoras fundamentales para su crecimiento"
+      },
+      {
+        title: "Socialización y Adaptación Escolar",
+        description: "Primeras experiencias de convivencia grupal en un ambiente seguro y acogedor"
+      },
+      {
+        title: "Actividades de Exploración y Descubrimiento",
+        description: "Espacios de juego y exploración que fomentan la curiosidad natural y el aprendizaje activo"
+      },
+      {
+        title: "Desarrollo del Lenguaje",
+        description: "Estimulación temprana del lenguaje verbal y comprensión a través de canciones, cuentos y juegos"
+      },
+      {
+        title: "Rutinas y Autonomía",
+        description: "Establecimiento de rutinas saludables y desarrollo de independencia apropiada para su edad"
+      },
+    ],
+    outcomes: [
+      "Adaptación exitosa al ambiente escolar",
+      "Desarrollo de habilidades motoras fundamentales",
+      "Primeras habilidades sociales y de convivencia",
+      "Estimulación sensorial y cognitiva apropiada",
+      "Base sólida para continuar en Kínder",
+    ],
+    testimonial: {
+      text: "Estaba preocupada por dejar a mi bebé tan pequeña en la escuela, pero el cariño y profesionalismo de las maestras de Pre-Kínder me tranquilizaron desde el primer día. Ahora mi hija está feliz, ha desarrollado muchas habilidades y sobre todo, ama ir a la escuela.",
+      author: "Laura Martínez",
+      role: "Madre de alumna de Pre-Kínder",
+    },
+  },
   kinder: {
     promise: "Un Comienzo Lleno de Amor y Aprendizaje",
     promiseDescription: "En nuestro kínder, su hijo descubrirá el amor por aprender en un ambiente seguro, cálido y estimulante donde cada día es una nueva aventura.",

@@ -5,6 +5,7 @@ import { niveles } from "@/data/niveles";
 
 export default function NivelesSection() {
   const nivelImages = [
+    "/images/kinder-students.jpg", // Pre-Kinder
     "/images/kinder-students.jpg", // Kinder
     "/images/primaria-students.jpg", // Primaria
     "/images/secundaria-students.jpg", // Secundaria
