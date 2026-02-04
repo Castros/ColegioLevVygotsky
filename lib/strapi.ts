@@ -19,7 +19,7 @@ export async function fetchAPI(path: string, options: RequestInit = {}) {
     headers: {
       'Content-Type': 'application/json',
     },
-    cache: 'no-store', // Disable Next.js fetch cache for build-time fetching
+    cache: 'force-cache', // Cache at build time for static export
   };
 
   const mergedOptions = {
