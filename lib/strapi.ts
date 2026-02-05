@@ -60,6 +60,15 @@ export async function fetchAPI(path: string, options: RequestInit = {}) {
 /**
  * Helper to get image URL from Strapi
  * In Strapi v3, images can be relative or absolute
+ *
+ * In production builds:
+ * - Images are downloaded from Strapi during build time
+ * - URLs are rewritten to point to local /strapi-images/ folder
+ * - Everything is deployed to S3 (fully static)
+ *
+ * In development:
+ * - Images are fetched directly from Strapi URL
+ * - Allows seeing image changes immediately
  */
 export function getStrapiMedia(url: string | null | undefined): string | null {
   if (!url) return null;
@@ -69,13 +78,21 @@ export function getStrapiMedia(url: string | null | undefined): string | null {
     return url;
   }
 
-  // If it's a Strapi upload (starts with /uploads/), prepend the Strapi URL
+  // If it's a Strapi upload (starts with /uploads/)
   if (url.startsWith('/uploads/')) {
-    return getStrapiURL(url);
+    // In production build: rewrite to local path (images downloaded during build)
+    // In development: fetch from Strapi directly (see changes immediately)
+    if (process.env.NODE_ENV === 'production') {
+      // Extract filename from Strapi URL
+      const filename = url.split('/').pop();
+      return `/strapi-images/${filename}`;
+    } else {
+      // Development: fetch from Strapi
+      return getStrapiURL(url);
+    }
   }
 
   // Otherwise it's a local image (from fallback data) - return as-is
-  // These will be served from the Next.js public folder (deployed to S3)
   return url;
 }
 
