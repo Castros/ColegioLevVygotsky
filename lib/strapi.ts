@@ -19,9 +19,9 @@ export async function fetchAPI(path: string, options: RequestInit = {}) {
     headers: {
       'Content-Type': 'application/json',
     },
-    // Always fetch fresh data from Strapi during builds
-    // No caching needed since the entire site is rebuilt statically
-    cache: 'no-store',
+    // Use force-cache for static exports to ensure data is fetched at build time
+    // Instead of bailing out to dynamic rendering (which triggers fallbacks)
+    cache: 'force-cache',
   };
 
   const mergedOptions = {
