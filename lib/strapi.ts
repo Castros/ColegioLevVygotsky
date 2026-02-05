@@ -69,8 +69,14 @@ export function getStrapiMedia(url: string | null | undefined): string | null {
     return url;
   }
 
-  // Otherwise, prepend the Strapi URL
-  return getStrapiURL(url);
+  // If it's a Strapi upload (starts with /uploads/), prepend the Strapi URL
+  if (url.startsWith('/uploads/')) {
+    return getStrapiURL(url);
+  }
+
+  // Otherwise it's a local image (from fallback data) - return as-is
+  // These will be served from the Next.js public folder (deployed to S3)
+  return url;
 }
 
 /**
