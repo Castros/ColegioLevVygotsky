@@ -151,6 +151,7 @@ export async function getServicesPage() {
     return data;
   } catch (error) {
     console.error('Error fetching services page:', error);
+    // Return null gracefully - the page will use fallback data
     return null;
   }
 }

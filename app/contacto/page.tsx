@@ -1,6 +1,5 @@
 import { Metadata } from "next";
-import { FaPhone, FaEnvelope, FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
-import { FaTiktok } from "react-icons/fa6";
+import { FaPhone, FaEnvelope, FaFacebook, FaInstagram } from "react-icons/fa";
 import ContactForm from "./ContactForm";
 
 export const metadata: Metadata = {
@@ -82,15 +81,7 @@ export default function ContactPage() {
                     <h3 className="text-lg font-medium text-slate-900">Redes Sociales</h3>
                     <div className="mt-3 flex items-center space-x-3">
                       <a
-                        href="https://facebook.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center text-slate-600 hover:border-green-600 hover:text-green-600 transition-colors"
-                      >
-                        <FaFacebook className="text-sm" />
-                      </a>
-                      <a
-                        href="https://instagram.com"
+                        href="https://www.instagram.com/colegiolevvygotsky1/"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center text-slate-600 hover:border-green-600 hover:text-green-600 transition-colors"
@@ -98,20 +89,12 @@ export default function ContactPage() {
                         <FaInstagram className="text-sm" />
                       </a>
                       <a
-                        href="https://youtube.com"
+                        href="https://www.facebook.com/profile.php?id=100063574022481"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center text-slate-600 hover:border-green-600 hover:text-green-600 transition-colors"
                       >
-                        <FaYoutube className="text-sm" />
-                      </a>
-                      <a
-                        href="https://tiktok.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-8 h-8 rounded-full border border-green-600 flex items-center justify-center text-green-600 hover:bg-green-50 transition-colors"
-                      >
-                        <FaTiktok className="text-sm" />
+                        <FaFacebook className="text-sm" />
                       </a>
                     </div>
                   </div>

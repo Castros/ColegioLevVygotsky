@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Contact Form Lambda with API Gateway and SES
+
+Parameters:
+  SESFromEmail:
+    Type: String
+    Description: Email address to send FROM (must be verified in SES)
+    Default: noreply@vigotskyreynosa.edu.mx
+
+  SESToEmail:
+    Type: String
+    Description: Email address to send TO (where form submissions go)
+    Default: info@vigotskyreynosa.edu.mx
+
+  AllowedOrigin:
+    Type: String
+    Description: Allowed CORS origin (your website URL)
+    Default: https://www.vigotskyreynosa.edu.mx
+
+Resources:
+  ContactFormFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: vigotsky-contact-form
+      Handler: index.handler
+      Runtime: nodejs20.x
+      Timeout: 30
+      MemorySize: 256
+      Environment:
+        Variables:
+          SES_FROM_EMAIL: !Ref SESFromEmail
+          SES_TO_EMAIL: !Ref SESToEmail
+          ALLOWED_ORIGIN: !Ref AllowedOrigin
+          AWS_REGION: !Ref AWS::Region
+      Policies:
+        - SESCrudPolicy:
+            IdentityName: !Ref SESFromEmail
+      Events:
+        ContactFormApi:
+          Type: Api
+          Properties:
+            Path: /contact
+            Method: POST
+            RestApiId: !Ref ContactFormApi
+
+  ContactFormApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: vigotsky-contact-form-api
+      StageName: prod
+      Cors:
+        AllowOrigin: !Sub "'${AllowedOrigin}'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowMethods: "'POST,OPTIONS'"
+        MaxAge: "'600'"
+      MethodSettings:
+        - ResourcePath: "/*"
+          HttpMethod: "*"
+          ThrottlingBurstLimit: 10
+          ThrottlingRateLimit: 5
+      DefinitionBody:
+        openapi: 3.0.1
+        info:
+          title: Contact Form API
+          version: '1.0'
+        paths:
+          /contact:
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ContactFormFunction.Arn}/invocations'
+              responses:
+                '200':
+                  description: Success
+            options:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ContactFormFunction.Arn}/invocations'
+              responses:
+                '200':
+                  description: CORS preflight response
+
+Outputs:
+  ApiEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub 'https://${ContactFormApi}.execute-api.${AWS::Region}.amazonaws.com/prod/contact'
+
+  FunctionArn:
+    Description: Lambda Function ARN
+    Value: !GetAtt ContactFormFunction.Arn
