@@ -6,11 +6,32 @@ export default async function ServicesSection() {
   // Fetch services from Strapi
   const services: Service[] = await getServices();
 
-  // Fallback data in case Strapi fails (Strapi is working, so this is rarely used)
-  const fallbackServices: Service[] = [];
+  // Fallback data in case Strapi fails
+  const fallbackServices: Partial<Service>[] = [
+    {
+      number: "01",
+      title: "After School",
+      shortDescription: "Cuidado y apoyo académico después del horario escolar para facilitar la vida de los padres que trabajan."
+    },
+    {
+      number: "02",
+      title: "Clases Extracurriculares",
+      shortDescription: "Programas deportivos, artísticos y culturales que complementan la formación integral de nuestros alumnos."
+    },
+    {
+      number: "03",
+      title: "Apoyo Psicopedagógico",
+      shortDescription: "Seguimiento cercano del desarrollo emocional y académico para asegurar el éxito de cada estudiante."
+    },
+    {
+      number: "04",
+      title: "Comedor Escolar",
+      shortDescription: "Menús nutritivos y balanceados preparados bajo estrictos estándares de higiene y calidad."
+    }
+  ];
 
   // Use Strapi data if available, otherwise use fallback
-  const displayServices = services.length > 0 ? services : fallbackServices;
+  const displayServices = services && services.length > 0 ? services : fallbackServices;
 
   return (
     <section className="py-20 bg-white">

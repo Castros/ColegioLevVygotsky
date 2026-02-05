@@ -10,7 +10,6 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,32 +23,27 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Restore Next.js cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            .next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
-
       - name: Build Next.js
         env:
           NEXT_PUBLIC_STRAPI_URL: ${{ secrets.NEXT_PUBLIC_STRAPI_URL || 'https://cms.vigotskyreynosa.edu.mx' }}
         run: |
-          echo "Fetching data from Strapi at build time..."
+          echo "📡 Connecting to Strapi at build time..."
           echo "STRAPI_URL: $NEXT_PUBLIC_STRAPI_URL"
-          echo "Testing Strapi connectivity..."
-          curl -f https://cms.vigotskyreynosa.edu.mx/homepage || echo "WARNING: Cannot reach Strapi!"
+          
+          # 1. Download images from Strapi to be part of the static export
+          npm run prebuild
+          
+          # 2. Build the static site
           npm run build
-          echo "Build complete - static files generated in out/ directory"
+          
+          echo "✅ Build complete - static files generated in out/ directory"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2 # Change to your region
+          aws-region: us-west-2
 
       - name: Sync to S3
         run: |
@@ -57,6 +51,4 @@ jobs:
 
       - name: Invalidate CloudFront cache
         run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/*"
+          aws cloudfront create-invalidation             --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}             --paths "/*"
