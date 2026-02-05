@@ -5,8 +5,12 @@ import NivelesSection from "@/components/NivelesSection";
 import CTASection from "@/components/CTASection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import ValuePropositionSection from "@/components/ValuePropositionSection";
+import { getTestimonials } from "@/lib/strapi";
 
-export default function Home() {
+export default async function Home() {
+  // Fetch testimonials from Strapi
+  const testimonials = await getTestimonials();
+
   return (
     <div>
       <HeroStrapi />
@@ -14,7 +18,7 @@ export default function Home() {
       <AboutSection />
       <NivelesSection />
       <ValuePropositionSection />
-      <TestimonialsSection />
+      <TestimonialsSection testimonials={testimonials} />
       <CTASection />
     </div>
   );

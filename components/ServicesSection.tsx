@@ -1,32 +1,16 @@
 import Link from "next/link";
+import { getServices } from "@/lib/strapi";
+import { Service } from "@/lib/types";
 
-export default function ServicesSection() {
-  const services = [
-    {
-      number: "01.",
-      title: "Plan de Estudios Integra",
-      description: "Un plan educativo completo que fomenta el pensamiento crítico y la creatividad en los estudiantes.",
-      link: "/servicios"
-    },
-    {
-      number: "02.",
-      title: "Actividades Extracurriculares",
-      description: "Una variedad de clubes y clases diseñados para potenciar las habilidades e intereses de los estudiantes.",
-      link: "/servicios"
-    },
-    {
-      number: "03.",
-      title: "Estancia",
-      description: "Un ambiente seguro y estimulante para los niños fuera del horario escolar.",
-      link: "/servicios"
-    },
-    {
-      number: "04.",
-      title: "Métodos de Enseñanza Progresivos",
-      description: "Estrategias innovadoras de enseñanza para potenciar la participación y el aprendizaje de los estudiantes.",
-      link: "/servicios"
-    }
-  ];
+export default async function ServicesSection() {
+  // Fetch services from Strapi
+  const services: Service[] = await getServices();
+
+  // Fallback data in case Strapi fails (Strapi is working, so this is rarely used)
+  const fallbackServices: Service[] = [];
+
+  // Use Strapi data if available, otherwise use fallback
+  const displayServices = services.length > 0 ? services : fallbackServices;
 
   return (
     <section className="py-20 bg-white">
@@ -48,8 +32,8 @@ export default function ServicesSection() {
 
           {/* Right Column - Services Grid */}
           <div className="grid md:grid-cols-2 gap-8">
-            {services.map((service, index) => (
-              <div key={index} className="space-y-3">
+            {displayServices.map((service, index) => (
+              <div key={service.id || index} className="space-y-3">
                 <div className="text-3xl font-bold text-green-600">
                   {service.number}
                 </div>
@@ -57,10 +41,10 @@ export default function ServicesSection() {
                   {service.title}
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  {service.description}
+                  {service.shortDescription}
                 </p>
                 <Link
-                  href={service.link}
+                  href="/servicios"
                   className="inline-block text-green-600 hover:text-green-700 font-semibold text-sm uppercase tracking-wide transition-colors"
                 >
                   VER MÁS

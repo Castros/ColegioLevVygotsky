@@ -1,5 +1,5 @@
 import React from 'react';
-import { Instagram, Facebook, Twitter, Phone } from 'lucide-react';
+import { Instagram, Facebook, Phone } from 'lucide-react';
 
 export default function TopBar() {
   return (
@@ -19,7 +19,7 @@ export default function TopBar() {
           <span className="hidden sm:inline">Signos en nuestro redes</span>
           <div className="flex gap-3">
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/colegiolevvygotsky1/"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-green-200 transition-colors"
@@ -28,22 +28,13 @@ export default function TopBar() {
               <Instagram size={18} />
             </a>
             <a
-              href="https://facebook.com"
+              href="https://www.facebook.com/profile.php?id=100063574022481"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-green-200 transition-colors"
               aria-label="Facebook"
             >
               <Facebook size={18} />
-            </a>
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-green-200 transition-colors"
-              aria-label="Twitter"
-            >
-              <Twitter size={18} />
             </a>
           </div>
         </div>

@@ -1,8 +1,14 @@
 import { FaCheck } from "react-icons/fa";
 import Image from "next/image";
+import { getValuePropositions } from "@/lib/strapi";
+import { ValueProposition } from "@/lib/types";
 
-export default function ValuePropositionSection() {
-  const values = [
+export default async function ValuePropositionSection() {
+  // Fetch value propositions from Strapi
+  const valueProps: ValueProposition[] = await getValuePropositions();
+
+  // Fallback data
+  const fallbackValues = [
     {
       title: "Enfoque Educativo Holístico",
       description: "Nos enfocamos en el desarrollo integral de los estudiantes, fomentando habilidades académicas, sociales y emocionales en un ambiente de cuidado y apoyo."
@@ -16,6 +22,8 @@ export default function ValuePropositionSection() {
       description: "Ofrecemos una amplia variedad de clases extracurriculares que enriquecen la experiencia de los estudiantes y fomentan intereses personales más allá de lo académico."
     }
   ];
+
+  const values = valueProps.length > 0 ? valueProps : fallbackValues;
 
   return (
     <section className="relative w-full overflow-hidden bg-green-50">

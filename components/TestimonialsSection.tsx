@@ -1,45 +1,83 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { FaStar } from "react-icons/fa";
+import { TestimonialExtended } from "@/lib/types";
 
-export default function TestimonialsSection() {
+interface TestimonialsSectionProps {
+  testimonials: TestimonialExtended[];
+}
+
+export default function TestimonialsSection({ testimonials }: TestimonialsSectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const testimonials = [
+  // Fallback data in case no testimonials provided
+  const fallbackTestimonials = [
     {
+      id: 1,
       name: "María González",
       role: "Madre de Estudiante",
       rating: 5,
-      text: "Vigotsky Reynosa ha transformado la educación de mi hijo. Los maestros son dedicados y el ambiente es perfecto para el aprendizaje."
+      text: "Vigotsky Reynosa ha transformado la educación de mi hijo. Los maestros son dedicados y el ambiente es perfecto para el aprendizaje.",
+      message: "",
+      order: 1,
+      created_at: "",
+      updated_at: "",
+      published_at: ""
     },
     {
+      id: 2,
       name: "Carlos Ramírez",
       role: "Padre de Estudiante",
       rating: 5,
-      text: "Excelente institución educativa. Mi hija ha desarrollado habilidades académicas y sociales excepcionales gracias al equipo de Vigotsky."
+      text: "Excelente institución educativa. Mi hija ha desarrollado habilidades académicas y sociales excepcionales gracias al equipo de Vigotsky.",
+      message: "",
+      order: 2,
+      created_at: "",
+      updated_at: "",
+      published_at: ""
     },
     {
+      id: 3,
       name: "Ana López",
       role: "Madre de Estudiante",
       rating: 5,
-      text: "La mejor decisión que tomamos fue inscribir a nuestros hijos aquí. El enfoque integral y personalizado hace la diferencia."
+      text: "La mejor decisión que tomamos fue inscribir a nuestros hijos aquí. El enfoque integral y personalizado hace la diferencia.",
+      message: "",
+      order: 3,
+      created_at: "",
+      updated_at: "",
+      published_at: ""
     },
     {
+      id: 4,
       name: "Roberto Silva",
       role: "Padre de Estudiante",
       rating: 5,
-      text: "Los programas extracurriculares son increíbles. Mi hijo está más motivado que nunca y realmente disfruta ir a la escuela."
+      text: "Los programas extracurriculares son increíbles. Mi hijo está más motivado que nunca y realmente disfruta ir a la escuela.",
+      message: "",
+      order: 4,
+      created_at: "",
+      updated_at: "",
+      published_at: ""
     },
     {
+      id: 5,
       name: "Patricia Morales",
       role: "Madre de Estudiante",
       rating: 5,
-      text: "El nivel académico es excelente y los valores que inculcan son fundamentales para el desarrollo de nuestros hijos."
+      text: "El nivel académico es excelente y los valores que inculcan son fundamentales para el desarrollo de nuestros hijos.",
+      message: "",
+      order: 5,
+      created_at: "",
+      updated_at: "",
+      published_at: ""
     }
   ];
 
+  const displayTestimonials = testimonials.length > 0 ? testimonials : fallbackTestimonials;
+
   // Duplicate testimonials for seamless loop
-  const duplicatedTestimonials = [...testimonials, ...testimonials];
+  const duplicatedTestimonials = [...displayTestimonials, ...displayTestimonials];
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;

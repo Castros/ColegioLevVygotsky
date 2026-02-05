@@ -1,6 +1,6 @@
 "use client";
 import { navLinks } from "@/lib/data";
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaFacebook, FaInstagram } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -87,7 +87,7 @@ export default function Footer() {
                 href="tel:+5289174-0031"
                 className="flex items-center gap-3 text-slate-400 hover:text-green-400 transition-colors"
               >
-                <FaPhone className="shrink-0" /> 55 899 174-0031
+                <FaPhone className="shrink-0" /> +52 899 174-0031
               </a>
             </li>
             <li>
@@ -107,7 +107,7 @@ export default function Footer() {
           {/* Social Media */}
           <div className="mt-6 flex items-center gap-4">
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/colegiolevvygotsky1/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
@@ -116,22 +116,13 @@ export default function Footer() {
               <FaInstagram className="h-5 w-5" />
             </a>
             <a
-              href="https://facebook.com"
+              href="https://www.facebook.com/profile.php?id=100063574022481"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"
               className="text-slate-400 hover:text-green-400 transition-colors"
             >
               <FaFacebook className="h-5 w-5" />
-            </a>
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Twitter"
-              className="text-slate-400 hover:text-green-400 transition-colors"
-            >
-              <FaTwitter className="h-5 w-5" />
             </a>
           </div>
         </div>
