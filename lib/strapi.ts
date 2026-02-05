@@ -73,10 +73,11 @@ export function getStrapiMedia(url: string | null | undefined): string | null {
 
 /**
  * Fetch Services (Collection Type)
+ * Strapi v3 endpoint: /services (no /api prefix)
  */
 export async function getServices() {
   try {
-    const data = await fetchAPI('/api/services?_sort=order:ASC');
+    const data = await fetchAPI('/services?_sort=order:ASC');
     return data;
   } catch (error) {
     console.error('Error fetching services:', error);
@@ -86,10 +87,11 @@ export async function getServices() {
 
 /**
  * Fetch Testimonials (Collection Type)
+ * Strapi v3 endpoint: /testimonials
  */
 export async function getTestimonials() {
   try {
-    const data = await fetchAPI('/api/testimonials?_sort=order:ASC');
+    const data = await fetchAPI('/testimonials?_sort=order:ASC');
     return data;
   } catch (error) {
     console.error('Error fetching testimonials:', error);
@@ -99,10 +101,11 @@ export async function getTestimonials() {
 
 /**
  * Fetch Value Propositions (Collection Type)
+ * Strapi v3 endpoint: /value-propositions
  */
 export async function getValuePropositions() {
   try {
-    const data = await fetchAPI('/api/value-propositions?_sort=order:ASC');
+    const data = await fetchAPI('/value-propositions?_sort=order:ASC');
     return data;
   } catch (error) {
     console.error('Error fetching value propositions:', error);
@@ -112,10 +115,11 @@ export async function getValuePropositions() {
 
 /**
  * Fetch About Section (Single Type)
+ * Strapi v3 endpoint: /about-section
  */
 export async function getAboutSection() {
   try {
-    const data = await fetchAPI('/api/about-section');
+    const data = await fetchAPI('/about-section');
     return data;
   } catch (error) {
     console.error('Error fetching about section:', error);
@@ -125,10 +129,11 @@ export async function getAboutSection() {
 
 /**
  * Fetch About Page Content (Single Type)
+ * Strapi v3 endpoint: /about-page
  */
 export async function getAboutPage() {
   try {
-    const data = await fetchAPI('/api/about-page');
+    const data = await fetchAPI('/about-page');
     return data;
   } catch (error) {
     console.error('Error fetching about page:', error);
@@ -138,10 +143,11 @@ export async function getAboutPage() {
 
 /**
  * Fetch Services Page Content (Single Type)
+ * Strapi v3 endpoint: /services-page
  */
 export async function getServicesPage() {
   try {
-    const data = await fetchAPI('/api/services-page');
+    const data = await fetchAPI('/services-page');
     return data;
   } catch (error) {
     console.error('Error fetching services page:', error);
@@ -151,10 +157,11 @@ export async function getServicesPage() {
 
 /**
  * Fetch CTA Section (Single Type)
+ * Strapi v3 endpoint: /cta-section
  */
 export async function getCTASection() {
   try {
-    const data = await fetchAPI('/api/cta-section');
+    const data = await fetchAPI('/cta-section');
     return data;
   } catch (error) {
     console.error('Error fetching CTA section:', error);
@@ -164,10 +171,11 @@ export async function getCTASection() {
 
 /**
  * Fetch Education Levels (Collection Type)
+ * Strapi v3 endpoint: /education-levels
  */
 export async function getEducationLevels() {
   try {
-    const data = await fetchAPI('/api/education-levels?_sort=order:ASC');
+    const data = await fetchAPI('/education-levels?_sort=order:ASC');
     return data;
   } catch (error) {
     console.error('Error fetching education levels:', error);
@@ -177,10 +185,11 @@ export async function getEducationLevels() {
 
 /**
  * Fetch Single Education Level by slug (Collection Type)
+ * Strapi v3 endpoint: /education-levels
  */
 export async function getEducationLevelBySlug(slug: string) {
   try {
-    const data = await fetchAPI(`/api/education-levels?slug=${slug}`);
+    const data = await fetchAPI(`/education-levels?slug=${slug}`);
     return data && data.length > 0 ? data[0] : null;
   } catch (error) {
     console.error(`Error fetching education level ${slug}:`, error);
@@ -190,10 +199,11 @@ export async function getEducationLevelBySlug(slug: string) {
 
 /**
  * Fetch Contact Page (Single Type)
+ * Strapi v3 endpoint: /contact-page
  */
 export async function getContactPage() {
   try {
-    const data = await fetchAPI('/api/contact-page');
+    const data = await fetchAPI('/contact-page');
     return data;
   } catch (error) {
     console.error('Error fetching contact page:', error);
