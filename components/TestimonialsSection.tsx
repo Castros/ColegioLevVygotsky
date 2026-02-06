@@ -182,7 +182,7 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
 
               {/* Text */}
               <p className="text-slate-700 text-sm md:text-base leading-relaxed italic text-center mb-6 line-clamp-4">
-                "{testimonial.text}"
+                "{testimonial.text || testimonial.message}"
               </p>
 
               {/* Author */}
