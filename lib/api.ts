@@ -3,7 +3,7 @@
  */
 
 import { fetchAPI } from './strapi';
-import type { Homepage, Gallery, Testimonial, Page, BlogPost } from './types';
+import type { Homepage, Gallery, Testimonial, Page, BlogPost, AboutPage } from './types';
 
 /**
  * Get homepage data (single type)
