@@ -3,6 +3,7 @@ import { navLinks } from "@/lib/data";
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaFacebook, FaInstagram } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
+import { siteConfig } from "@/lib/site-config";
 
 export default function Footer() {
   const quickLinks = [
@@ -84,30 +85,30 @@ export default function Footer() {
           <ul className="space-y-3 text-sm">
             <li>
               <a
-                href="tel:+5289174-0031"
+                href={siteConfig.contact.phone.link}
                 className="flex items-center gap-3 text-slate-400 hover:text-green-400 transition-colors"
               >
-                <FaPhone className="shrink-0" /> +52 899 174-0031
+                <FaPhone className="shrink-0" /> {siteConfig.contact.phone.display}
               </a>
             </li>
             <li>
               <a
-                href="mailto:contact@vigotskyreynosa.edu.mx"
+                href={siteConfig.contact.email.link}
                 className="flex items-center gap-3 text-slate-400 hover:text-green-400 transition-colors"
               >
-                <FaEnvelope className="shrink-0" /> contact@vigotskyreynosa.edu.mx
+                <FaEnvelope className="shrink-0" /> {siteConfig.contact.email.display}
               </a>
             </li>
             <li className="flex items-start gap-3 text-slate-400">
               <FaMapMarkerAlt className="shrink-0 mt-1" />
-              <span>Reynosa, México</span>
+              <span>{siteConfig.contact.address.fullAddress}</span>
             </li>
           </ul>
 
           {/* Social Media */}
           <div className="mt-6 flex items-center gap-4">
             <a
-              href="https://www.instagram.com/colegiolevvygotsky1/"
+              href={siteConfig.social.instagram}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
@@ -116,7 +117,7 @@ export default function Footer() {
               <FaInstagram className="h-5 w-5" />
             </a>
             <a
-              href="https://www.facebook.com/profile.php?id=100063574022481"
+              href={siteConfig.social.facebook}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Instagram, Facebook, Phone } from 'lucide-react';
+import { siteConfig } from '@/lib/site-config';
 
 export default function TopBar() {
   return (
@@ -7,11 +8,11 @@ export default function TopBar() {
       <div className="container mx-auto flex justify-between items-center text-sm">
         {/* Phone Number */}
         <a
-          href="tel:+5289174-0031"
+          href={siteConfig.contact.phone.link}
           className="flex items-center gap-2 hover:text-green-200 transition-colors"
         >
           <Phone size={16} />
-          <span>+52 899 174-0031</span>
+          <span>{siteConfig.contact.phone.display}</span>
         </a>
 
         {/* Social Media Links */}
@@ -19,7 +20,7 @@ export default function TopBar() {
           <span className="hidden sm:inline">Signos en nuestro redes</span>
           <div className="flex gap-3">
             <a
-              href="https://www.instagram.com/colegiolevvygotsky1/"
+              href={siteConfig.social.instagram}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-green-200 transition-colors"
@@ -28,7 +29,7 @@ export default function TopBar() {
               <Instagram size={18} />
             </a>
             <a
-              href="https://www.facebook.com/profile.php?id=100063574022481"
+              href={siteConfig.social.facebook}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-green-200 transition-colors"
