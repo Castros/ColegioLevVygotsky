@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { FaPhone, FaEnvelope, FaFacebook, FaInstagram } from "react-icons/fa";
 import ContactForm from "./ContactForm";
+import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Contacto",
@@ -47,8 +48,8 @@ export default function ContactPage() {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-medium text-slate-900">Teléfono</h3>
-                    <a href="tel:+528991740031" className="text-slate-600 hover:text-green-600 mt-1 block">
-                      +52 899 174 0031
+                    <a href={siteConfig.contact.phone.link} className="text-slate-600 hover:text-green-600 mt-1 block">
+                      {siteConfig.contact.phone.display}
                     </a>
                   </div>
                 </div>
@@ -62,8 +63,8 @@ export default function ContactPage() {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-medium text-green-600">Email</h3>
-                    <a href="mailto:info@vigotskyreynosa.edu.mx" className="text-green-600 hover:text-green-700 mt-1 block">
-                      info@vigotskyreynosa.edu.mx
+                    <a href={siteConfig.contact.email.link} className="text-green-600 hover:text-green-700 mt-1 block">
+                      {siteConfig.contact.email.display}
                     </a>
                   </div>
                 </div>
@@ -81,7 +82,7 @@ export default function ContactPage() {
                     <h3 className="text-lg font-medium text-slate-900">Redes Sociales</h3>
                     <div className="mt-3 flex items-center space-x-3">
                       <a
-                        href="https://www.instagram.com/colegiolevvygotsky1/"
+                        href={siteConfig.social.instagram}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center text-slate-600 hover:border-green-600 hover:text-green-600 transition-colors"
@@ -89,7 +90,7 @@ export default function ContactPage() {
                         <FaInstagram className="text-sm" />
                       </a>
                       <a
-                        href="https://www.facebook.com/profile.php?id=100063574022481"
+                        href={siteConfig.social.facebook}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center text-slate-600 hover:border-green-600 hover:text-green-600 transition-colors"
@@ -127,7 +128,7 @@ export default function ContactPage() {
         <section className="mb-16">
           <div className="w-full h-[400px] rounded-2xl overflow-hidden shadow-lg">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1791.8592520102459!2d-98.36072362627539!3d26.075454551296275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8665058add1dfced%3A0x8d748b063e65e551!2sColegio%20Lev%20Vygotsky!5e0!3m2!1sen!2smx!4v1763515642391!5m2!1sen!2smx"
+              src={siteConfig.maps.embedUrl}
               width="100%"
               height="100%"
               style={{ border: 0 }}
