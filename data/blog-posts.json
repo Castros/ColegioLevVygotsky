@@ -19,7 +19,7 @@
       "created_at": "2024-11-15T10:00:00.000Z",
       "updated_at": "2024-11-15T10:00:00.000Z"
     },
-    "category": "Academics",
+    "category": "Académicos",
     "published_date": "2024-11-15",
     "author": "Colegio Lev Vygotsky",
     "created_at": "2024-11-15T10:00:00.000Z",
@@ -46,7 +46,7 @@
       "created_at": "2024-11-10T10:00:00.000Z",
       "updated_at": "2024-11-10T10:00:00.000Z"
     },
-    "category": "School Events",
+    "category": "Eventos Escolares",
     "published_date": "2024-11-10",
     "author": "Prof. María González",
     "created_at": "2024-11-10T10:00:00.000Z",
@@ -73,7 +73,7 @@
       "created_at": "2024-11-05T10:00:00.000Z",
       "updated_at": "2024-11-05T10:00:00.000Z"
     },
-    "category": "Student Life",
+    "category": "Vida Estudiantil",
     "published_date": "2024-11-05",
     "author": "Dra. Carmen Rodríguez",
     "created_at": "2024-11-05T10:00:00.000Z",
@@ -100,7 +100,7 @@
       "created_at": "2024-10-28T10:00:00.000Z",
       "updated_at": "2024-10-28T10:00:00.000Z"
     },
-    "category": "Teacher Spotlights",
+    "category": "Destacados de Maestros",
     "published_date": "2024-10-28",
     "author": "Dirección General",
     "created_at": "2024-10-28T10:00:00.000Z",

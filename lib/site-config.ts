@@ -12,8 +12,8 @@ export const siteConfig = {
 
   contact: {
     phone: {
-      display: '+52 899 174-0031',
-      link: 'tel:+528991740031',
+      display: '+52 899 174-0000',
+      link: 'tel:+528991740000',
     },
     email: {
       display: 'info@vigotskyreynosa.edu.mx',
@@ -29,7 +29,7 @@ export const siteConfig = {
   },
 
   social: {
-    facebook: 'https://www.facebook.com/profile.php?id=100063574022481',
+    facebook: 'https://www.facebook.com/profile.php?i   d=100063574022481',
     instagram: 'https://www.instagram.com/colegiolevvygotsky1/',
     whatsapp: undefined,
   },

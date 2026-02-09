@@ -4,17 +4,16 @@ import { useState, useMemo } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import { getStrapiMedia } from "@/lib/strapi";
-import type { BlogPost } from "@/lib/types";
+import type { BlogPost, Category } from "@/lib/types";
 
 interface BlogFilterProps {
   posts: BlogPost[];
+  categories: Category[];
 }
 
-export function BlogFilter({ posts }: BlogFilterProps) {
+export function BlogFilter({ posts, categories }: BlogFilterProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
-  const categories = ['Academics', 'Student Life', 'School Events', 'Alumni News', 'Teacher Spotlights'];
 
   const filteredPosts = useMemo(() => {
     return posts.filter(post => {
@@ -22,7 +21,17 @@ export function BlogFilter({ posts }: BlogFilterProps) {
         post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesCategory = !selectedCategory || post.category === selectedCategory;
+      // Handle both Category object and string types
+      let postCategorySlug: string;
+      if (typeof post.category === 'string') {
+        postCategorySlug = post.category;
+      } else if (post.category && typeof post.category === 'object') {
+        postCategorySlug = post.category.slug;
+      } else {
+        postCategorySlug = '';
+      }
+
+      const matchesCategory = !selectedCategory || postCategorySlug === selectedCategory;
 
       return matchesSearch && matchesCategory;
     });
@@ -58,7 +67,7 @@ export function BlogFilter({ posts }: BlogFilterProps) {
                   </p>
                   <div className="flex items-center gap-2 mt-2">
                     <span className="text-xs font-medium text-green-700 bg-green-50 px-2 py-1 rounded">
-                      {post.category}
+                      {typeof post.category === 'string' ? post.category : post.category?.name}
                     </span>
                     <p className="text-slate-500 text-xs font-normal leading-normal">
                       {new Date(post.published_date).toLocaleDateString('es-MX', {
@@ -118,15 +127,15 @@ export function BlogFilter({ posts }: BlogFilterProps) {
             </button>
             {categories.map((category) => (
               <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
+                key={category.id}
+                onClick={() => setSelectedCategory(category.slug)}
                 className={`flex h-8 shrink-0 cursor-pointer items-center justify-center gap-x-2 rounded-lg px-3 transition-colors ${
-                  selectedCategory === category
+                  selectedCategory === category.slug
                     ? 'bg-green-600 text-white'
                     : 'bg-slate-100 hover:bg-green-50 hover:text-green-700 text-slate-700'
                 }`}
               >
-                <p className="text-sm font-medium">{category}</p>
+                <p className="text-sm font-medium">{category.name}</p>
               </button>
             ))}
           </div>
