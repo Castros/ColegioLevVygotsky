@@ -19,9 +19,9 @@ export async function fetchAPI(path: string, options: RequestInit = {}) {
     headers: {
       'Content-Type': 'application/json',
     },
-    // Use force-cache for static exports to ensure data is fetched at build time
-    // Instead of bailing out to dynamic rendering (which triggers fallbacks)
-    cache: 'force-cache',
+    // In development: use no-cache to see changes immediately
+    // In production: use force-cache for static exports
+    cache: process.env.NODE_ENV === 'development' ? 'no-cache' : 'force-cache',
   };
 
   const mergedOptions = {

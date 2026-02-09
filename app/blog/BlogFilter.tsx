@@ -7,7 +7,7 @@ import { getStrapiMedia } from "@/lib/strapi";
 import type { BlogPost, Category } from "@/lib/types";
 
 interface BlogFilterProps {
-  posts: BlogPost[];
+  posts: (BlogPost & { formattedDate?: string })[];
   categories: Category[];
 }
 
@@ -70,7 +70,7 @@ export function BlogFilter({ posts, categories }: BlogFilterProps) {
                       {typeof post.category === 'string' ? post.category : post.category?.name}
                     </span>
                     <p className="text-slate-500 text-xs font-normal leading-normal">
-                      {new Date(post.published_date).toLocaleDateString('es-MX', {
+                      {post.formattedDate || new Date(post.published_date).toLocaleDateString('es-MX', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'

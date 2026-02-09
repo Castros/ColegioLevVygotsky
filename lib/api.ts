@@ -91,11 +91,27 @@ export async function getPageBySlug(slug: string): Promise<Page | null> {
 
 /**
  * Get all blog categories
- * Data is synced from Strapi before build via scripts/sync-blog-data.js
+ * In development: fetch from Strapi with JSON fallback
+ * In production: use synced JSON data
  */
 export async function getCategories(): Promise<Category[]> {
   try {
+    // In development, try to fetch from Strapi first
+    if (process.env.NODE_ENV === 'development') {
+      try {
+        const data = await fetchAPI('/categories?_sort=order:ASC');
+        if (data && data.length > 0) {
+          console.log('[Categories] Using data from Strapi');
+          return data;
+        }
+      } catch (strapiError) {
+        console.warn('[Categories] Strapi fetch failed, falling back to JSON:', strapiError);
+      }
+    }
+
+    // Fall back to JSON data (or use in production)
     const categoriesData = await import('@/data/categories.json');
+    console.log('[Categories] Using JSON fallback data');
     return (categoriesData.default || []) as Category[];
   } catch (error) {
     console.error('Error fetching categories:', error);
@@ -105,11 +121,27 @@ export async function getCategories(): Promise<Category[]> {
 
 /**
  * Get all blog posts
- * Data is synced from Strapi before build via scripts/sync-blog-data.js
+ * In development: fetch from Strapi with JSON fallback
+ * In production: use synced JSON data
  */
 export async function getBlogPosts(): Promise<BlogPost[]> {
   try {
+    // In development, try to fetch from Strapi first
+    if (process.env.NODE_ENV === 'development') {
+      try {
+        const data = await fetchAPI('/blog-posts?_sort=published_date:DESC');
+        if (data && data.length > 0) {
+          console.log('[Blog Posts] Using data from Strapi');
+          return data;
+        }
+      } catch (strapiError) {
+        console.warn('[Blog Posts] Strapi fetch failed, falling back to JSON:', strapiError);
+      }
+    }
+
+    // Fall back to JSON data (or use in production)
     const blogPostsData = await import('@/data/blog-posts.json');
+    console.log('[Blog Posts] Using JSON fallback data');
     return (blogPostsData.default || []) as BlogPost[];
   } catch (error) {
     console.error('Error fetching blog posts:', error);
@@ -141,13 +173,28 @@ export async function getBlogPostsByCategory(categorySlugOrName: string): Promis
 
 /**
  * Get a single blog post by slug
- * Strapi v3 endpoint: /blog-posts?slug=example-slug
+ * In development: fetch from Strapi with JSON fallback
+ * In production: use synced JSON data
  */
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
   try {
-    // Use local JSON file for development
+    // In development, try to fetch from Strapi first
+    if (process.env.NODE_ENV === 'development') {
+      try {
+        const posts = await fetchAPI(`/blog-posts?slug=${slug}`);
+        if (posts && posts.length > 0) {
+          console.log(`[Blog Post ${slug}] Using data from Strapi`);
+          return posts[0];
+        }
+      } catch (strapiError) {
+        console.warn(`[Blog Post ${slug}] Strapi fetch failed, falling back to JSON:`, strapiError);
+      }
+    }
+
+    // Fall back to JSON data (or use in production)
     const blogPostsData = await import('@/data/blog-posts.json');
     const posts = (blogPostsData.default || []) as BlogPost[];
+    console.log(`[Blog Post ${slug}] Using JSON fallback data`);
     return posts.find((post: BlogPost) => post.slug === slug) || null;
   } catch (error) {
     console.error('Error fetching blog post:', error);

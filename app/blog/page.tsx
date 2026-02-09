@@ -7,6 +7,16 @@ export default async function BlogPage() {
     getCategories(),
   ]);
 
+  // Format dates on the server to avoid hydration mismatch
+  const postsWithFormattedDates = blogPosts.map(post => ({
+    ...post,
+    formattedDate: new Date(post.published_date).toLocaleDateString('es-MX', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }));
+
   return (
     <div className="relative flex min-h-screen w-full flex-col bg-slate-50">
       {/* Hero Section */}
@@ -29,7 +39,7 @@ export default async function BlogPage() {
 
       {/* Blog Grid & Sidebar */}
       <section className="container mx-auto px-4 md:px-8 py-8">
-        <BlogFilter posts={blogPosts} categories={categories} />
+        <BlogFilter posts={postsWithFormattedDates} categories={categories} />
       </section>
     </div>
   );

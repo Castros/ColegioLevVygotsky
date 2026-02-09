@@ -35,7 +35,7 @@ export interface StrapiImageFormat {
   width: number;
   height: number;
   size: number;
-  path?: string;
+  path?: string | null;
   url: string;
 }
 

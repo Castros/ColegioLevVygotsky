@@ -29,12 +29,12 @@ export const siteConfig = {
   },
 
   social: {
-    facebook: 'https://www.facebook.com/profile.php?i   d=100063574022481',
+    facebook: 'https://www.facebook.com/profile.php?id=100063574022481',
     instagram: 'https://www.instagram.com/colegiolevvygotsky1/',
     whatsapp: undefined,
   },
 
   maps: {
-    embedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1791.8592520102459!2d-98.36072362627539!3d26.075454551296275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8665058add1dfced%3A0x8d748b063e65e551!2sColegio%20Lev%20Vygotsky!5e0!3m2!1sen!2smx!4v1763515642391!5m2!1sen!2smx',
+    embedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1791.8592520102459!2d98.36072362627539!3d26.075454551296275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8665058add1dfced%3A0x8d748b063e65e551!2sColegio%20Lev%20Vygotsky!5e0!3m2!1sen!2smx!4v1763515642391!5m2!1sen!2smx',
   },
 } as const;
