@@ -108,7 +108,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         </div>
                         <div className="p-3">
                           <span className="text-xs font-medium text-green-700 bg-green-50 px-2 py-0.5 rounded">
-                            {relatedPost.category}
+                            {typeof relatedPost.category === 'string' ? relatedPost.category : relatedPost.category?.name}
                           </span>
                           <h3 className="text-sm font-bold text-slate-900 mt-2 line-clamp-2">
                             {relatedPost.title}
