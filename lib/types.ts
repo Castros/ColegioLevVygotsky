@@ -5,8 +5,8 @@
 export interface StrapiImage {
   id: number;
   name: string;
-  alternativeText?: string;
-  caption?: string;
+  alternativeText?: string | null;
+  caption?: string | null;
   width: number;
   height: number;
   formats?: {
@@ -14,13 +14,13 @@ export interface StrapiImage {
     small?: StrapiImageFormat;
     medium?: StrapiImageFormat;
     large?: StrapiImageFormat;
-  };
+  } | null;
   hash: string;
   ext: string;
   mime: string;
   size: number;
   url: string;
-  previewUrl?: string;
+  previewUrl?: string | null;
   provider: string;
   provider_metadata?: any;
   created_at: string;
@@ -68,7 +68,7 @@ export interface Testimonial {
   name: string;
   role: string;
   message: string;
-  photo?: StrapiImage;
+  photo?: StrapiImage | null;
   created_at: string;
   updated_at: string;
   published_at: string;
@@ -79,7 +79,7 @@ export interface Page {
   title: string;
   slug: string;
   content: string;
-  featured_image?: StrapiImage;
+  featured_image?: StrapiImage | null;
   created_at: string;
   updated_at: string;
   published_at: string;
@@ -90,7 +90,7 @@ export interface Category {
   id: number;
   name: string;
   slug: string;
-  order?: number;
+  order?: number | null;
   created_at: string;
   updated_at: string;
   published_at: string;
@@ -106,7 +106,7 @@ export interface BlogPost {
   featured_image: StrapiImage;
   category: Category | string; // Can be Category object from Strapi or string from JSON fallback
   published_date: string;
-  author?: string;
+  author?: string | null;
   created_at: string;
   updated_at: string;
   published_at: string;
@@ -139,7 +139,7 @@ export interface ValueProposition {
   id: number;
   title: string;
   description: string;
-  icon?: string;
+  icon?: string | null;
   order: number;
   created_at: string;
   updated_at: string;
@@ -210,8 +210,8 @@ export interface CTASection {
   description: string;
   primaryButtonText: string;
   primaryButtonLink: string;
-  secondaryButtonText?: string;
-  secondaryButtonLink?: string;
+  secondaryButtonText?: string | null;
+  secondaryButtonLink?: string | null;
   backgroundColor: string;
   created_at: string;
   updated_at: string;
@@ -250,9 +250,9 @@ export interface ContactPage {
   email: string;
   hours: string;
   mapUrl: string;
-  facebook?: string;
-  instagram?: string;
-  whatsapp?: string;
+  facebook?: string | null;
+  instagram?: string | null;
+  whatsapp?: string | null;
   created_at: string;
   updated_at: string;
   published_at: string;
