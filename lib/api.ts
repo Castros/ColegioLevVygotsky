@@ -3,7 +3,7 @@
  */
 
 import { fetchAPI } from './strapi';
-import type { Homepage, Gallery, Testimonial, Page, BlogPost, AboutPage } from './types';
+import type { Homepage, Gallery, Testimonial, Page, BlogPost, AboutPage, Category } from './types';
 
 /**
  * Get homepage data (single type)
@@ -90,12 +90,25 @@ export async function getPageBySlug(slug: string): Promise<Page | null> {
 }
 
 /**
+ * Get all blog categories
+ * Data is synced from Strapi before build via scripts/sync-blog-data.js
+ */
+export async function getCategories(): Promise<Category[]> {
+  try {
+    const categoriesData = await import('@/data/categories.json');
+    return (categoriesData.default || []) as Category[];
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return [];
+  }
+}
+
+/**
  * Get all blog posts
- * Strapi v3 endpoint: /blog-posts
+ * Data is synced from Strapi before build via scripts/sync-blog-data.js
  */
 export async function getBlogPosts(): Promise<BlogPost[]> {
   try {
-    // Use local JSON file for development
     const blogPostsData = await import('@/data/blog-posts.json');
     return (blogPostsData.default || []) as BlogPost[];
   } catch (error) {
@@ -105,15 +118,21 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
 }
 
 /**
- * Get blog posts by category
- * Strapi v3 endpoint: /blog-posts?category=Academics
+ * Get blog posts by category slug or name
+ * Handles both Category objects and string values
  */
-export async function getBlogPostsByCategory(category: string): Promise<BlogPost[]> {
+export async function getBlogPostsByCategory(categorySlugOrName: string): Promise<BlogPost[]> {
   try {
-    // Use local JSON file for development
     const blogPostsData = await import('@/data/blog-posts.json');
     const posts = (blogPostsData.default || []) as BlogPost[];
-    return posts.filter((post: BlogPost) => post.category === category);
+    return posts.filter((post: BlogPost) => {
+      if (typeof post.category === 'string') {
+        return post.category === categorySlugOrName;
+      } else if (post.category && typeof post.category === 'object') {
+        return post.category.slug === categorySlugOrName || post.category.name === categorySlugOrName;
+      }
+      return false;
+    });
   } catch (error) {
     console.error('Error fetching blog posts by category:', error);
     return [];

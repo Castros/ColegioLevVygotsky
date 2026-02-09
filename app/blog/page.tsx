@@ -1,8 +1,11 @@
-import { getBlogPosts } from "@/lib/api";
+import { getBlogPosts, getCategories } from "@/lib/api";
 import { BlogFilter } from "./BlogFilter";
 
 export default async function BlogPage() {
-  const blogPosts = await getBlogPosts();
+  const [blogPosts, categories] = await Promise.all([
+    getBlogPosts(),
+    getCategories(),
+  ]);
 
   return (
     <div className="relative flex min-h-screen w-full flex-col bg-slate-50">
@@ -26,7 +29,7 @@ export default async function BlogPage() {
 
       {/* Blog Grid & Sidebar */}
       <section className="container mx-auto px-4 md:px-8 py-8">
-        <BlogFilter posts={blogPosts} />
+        <BlogFilter posts={blogPosts} categories={categories} />
       </section>
     </div>
   );

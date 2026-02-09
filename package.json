@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/sync-contact-info.js && node scripts/download-strapi-images.js",
+    "prebuild": "node scripts/sync-contact-info.js && node scripts/sync-blog-data.js && node scripts/download-strapi-images.js",
     "build": "next build",
     "export": "next build",
     "start": "next start",

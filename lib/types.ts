@@ -85,6 +85,18 @@ export interface Page {
   published_at: string;
 }
 
+// Blog Category Collection Type
+export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  order?: number;
+  created_at: string;
+  updated_at: string;
+  published_at: string;
+}
+
+// Blog Post Collection Type
 export interface BlogPost {
   id: number;
   title: string;
@@ -92,7 +104,7 @@ export interface BlogPost {
   excerpt: string;
   content: string;
   featured_image: StrapiImage;
-  category: 'Academics' | 'Student Life' | 'School Events' | 'Alumni News' | 'Teacher Spotlights';
+  category: Category | string; // Can be Category object from Strapi or string from JSON fallback
   published_date: string;
   author?: string;
   created_at: string;
