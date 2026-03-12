@@ -1,16 +1,17 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { Nivel } from "@/data/niveles";
-import { FaCheck, FaClock, FaUsers, FaGraduationCap, FaHeart, FaArrowRight } from "react-icons/fa";
+import { EducationLevel } from "@/lib/types";
+import { getStrapiMedia } from "@/lib/strapi";
+import { FaCheck, FaGraduationCap, FaHeart, FaArrowRight } from "react-icons/fa";
 import MasonryGallery from "@/components/MasonryGallery";
 
 interface NivelContentProps {
-  nivel: Nivel;
+  nivel: EducationLevel;
 }
 
-// Photo galleries for each nivel
-const nivelGalleries = {
+// Photo galleries for each nivel (keyed by slug)
+const nivelGalleries: Record<string, string[]> = {
   "pre-kinder": [
     "/images/gallery-kinder/kinder-1.png",
     "/images/gallery-kinder/kinder-2.png",
@@ -46,16 +47,22 @@ const nivelGalleries = {
   ],
 };
 
-// Hero background images for each nivel
-const nivelHeroImages = {
+// Fallback hero background images (used when Strapi image is not available)
+const fallbackHeroImages: Record<string, string> = {
   "pre-kinder": "/images/hero-kinder-bg.png",
   kinder: "/images/hero-kinder-bg.png",
   primaria: "/images/hero-primaria-bg.jpg",
   secundaria: "/images/hero-secundaria-bg.jpg",
 };
 
-// Content specific to each nivel
-const nivelData = {
+// Content specific to each nivel (keyed by slug)
+const nivelData: Record<string, {
+  promise: string;
+  promiseDescription: string;
+  developmentalAreas: { title: string; description: string }[];
+  outcomes: string[];
+  testimonial: { text: string; author: string; role: string };
+}> = {
   "pre-kinder": {
     promise: "Los Primeros Pasos en el Mundo del Aprendizaje",
     promiseDescription: "En Pre-Kínder, acompañamos a los más pequeños en sus primeros pasos educativos, fomentando su desarrollo sensorial, motriz y socioemocional en un ambiente lleno de amor, cuidado y estímulo.",
@@ -227,9 +234,13 @@ const nivelData = {
 };
 
 export default function NivelContent({ nivel }: NivelContentProps) {
-  const data = nivelData[nivel.id as keyof typeof nivelData];
+  const data = nivelData[nivel.slug];
 
-  const heroImage = nivelHeroImages[nivel.id as keyof typeof nivelHeroImages];
+  // Use Strapi image if available, otherwise fall back to local
+  const heroImage =
+    (nivel.image?.url ? getStrapiMedia(nivel.image.url) : null) ||
+    fallbackHeroImages[nivel.slug] ||
+    "/images/placeholder.jpg";
 
   return (
     <div>
@@ -239,7 +250,7 @@ export default function NivelContent({ nivel }: NivelContentProps) {
         <div className="absolute inset-0 z-0">
           <Image
             src={heroImage}
-            alt={`Hero background ${nivel.name}`}
+            alt={`Hero background ${nivel.title}`}
             fill
             className="object-cover"
             priority
@@ -251,14 +262,11 @@ export default function NivelContent({ nivel }: NivelContentProps) {
         <div className="relative z-10 max-w-7xl mx-auto px-4 py-20 w-full">
           <div className="max-w-3xl">
             <p className="text-green-200 text-sm md:text-base font-semibold tracking-wider mb-4 uppercase">
-              {nivel.grades}
+              {nivel.ageRange}
             </p>
             <h1 className="text-white text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
-              {nivel.name}
+              {nivel.title}
             </h1>
-            {/* <p className="text-green-100 text-xl md:text-2xl mb-4">
-              {nivel.ageRange}
-            </p> */}
             <p className="text-white/90 text-lg md:text-xl leading-relaxed mb-8">
               {nivel.description}
             </p>
@@ -281,113 +289,118 @@ export default function NivelContent({ nivel }: NivelContentProps) {
       </section>
 
       {/* Promise Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <FaHeart className="text-green-600 text-5xl mx-auto mb-6" />
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-              {data.promise}
-            </h2>
-            <div className="w-24 h-1.5 bg-green-600 mx-auto mb-6"></div>
-            <p className="text-xl text-slate-700 leading-relaxed">
-              {data.promiseDescription}
-            </p>
+      {data && (
+        <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <FaHeart className="text-green-600 text-5xl mx-auto mb-6" />
+              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+                {data.promise}
+              </h2>
+              <div className="w-24 h-1.5 bg-green-600 mx-auto mb-6"></div>
+              <p className="text-xl text-slate-700 leading-relaxed">
+                {data.promiseDescription}
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Developmental Areas */}
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <FaGraduationCap className="text-green-600 text-5xl mx-auto mb-6" />
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-              Áreas de Desarrollo
-            </h2>
-            <div className="w-24 h-1.5 bg-green-600 mx-auto mb-6"></div>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-              Las habilidades y competencias que su hijo desarrollará en {nivel.name}
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto">
-            <div className="space-y-6">
-              {data.developmentalAreas.map((area, index) => (
-                <div
-                  key={index}
-                  className="flex items-start gap-4 border-l-4 border-green-600 pl-6 py-2"
-                >
-                  <div className="flex-1">
-                    <h3 className="text-slate-900 font-bold text-xl mb-2">{area.title}</h3>
-                    <p className="text-slate-600 text-base leading-relaxed">{area.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Masonry Gallery */}
-      <MasonryGallery
-        images={nivelGalleries[nivel.id as keyof typeof nivelGalleries]}
-        nivel={nivel.name}
-      />
-
-      {/* Learning Outcomes */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
-            {/* Left side - Large Icon */}
-            <div className="flex-shrink-0">
-              <div className="w-64 h-64 lg:w-80 lg:h-80 bg-gradient-to-br from-green-600 to-green-800 rounded-3xl flex items-center justify-center shadow-2xl">
-                <FaGraduationCap className="text-white text-8xl lg:text-9xl" />
-              </div>
-            </div>
-
-            {/* Right side - Content */}
-            <div className="flex-1">
+      {data && (
+        <section className="py-20 bg-slate-50">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-12">
+              <FaGraduationCap className="text-green-600 text-5xl mx-auto mb-6" />
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-                Lo Que Su Hijo Logrará
+                Áreas de Desarrollo
               </h2>
-              <div className="w-24 h-1.5 bg-green-600 mb-6"></div>
-              <p className="text-xl text-slate-600 mb-8">
-                Resultados medibles y transformadores
+              <div className="w-24 h-1.5 bg-green-600 mx-auto mb-6"></div>
+              <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+                Las habilidades y competencias que su hijo desarrollará en {nivel.title}
               </p>
+            </div>
 
-              <div className="space-y-5">
-                {data.outcomes.map((outcome, index) => (
+            <div className="max-w-4xl mx-auto">
+              <div className="space-y-6">
+                {data.developmentalAreas.map((area, index) => (
                   <div
                     key={index}
-                    className="flex items-start gap-4"
+                    className="flex items-start gap-4 border-l-4 border-green-600 pl-6 py-2"
                   >
-                    <div className="flex-shrink-0 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-                      <FaCheck className="text-white text-sm" />
+                    <div className="flex-1">
+                      <h3 className="text-slate-900 font-bold text-xl mb-2">{area.title}</h3>
+                      <p className="text-slate-600 text-base leading-relaxed">{area.description}</p>
                     </div>
-                    <p className="text-slate-700 text-lg leading-relaxed pt-1">{outcome}</p>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* Testimonial */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="bg-gradient-to-br from-green-700 to-green-900 rounded-3xl p-8 md:p-12 text-white">
-            <div className="text-6xl mb-6 opacity-50">"</div>
-            <p className="text-xl md:text-2xl leading-relaxed mb-8 italic">
-              {data.testimonial.text}
-            </p>
-            <div className="border-t border-white/20 pt-6">
-              <p className="font-bold text-lg">{data.testimonial.author}</p>
-              <p className="text-green-200">{data.testimonial.role}</p>
+      {/* Masonry Gallery */}
+      <MasonryGallery
+        images={nivelGalleries[nivel.slug] || []}
+        nivel={nivel.title}
+      />
+
+      {/* Learning Outcomes */}
+      {data && (
+        <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
+              {/* Left side - Large Icon */}
+              <div className="flex-shrink-0">
+                <div className="w-64 h-64 lg:w-80 lg:h-80 bg-gradient-to-br from-green-600 to-green-800 rounded-3xl flex items-center justify-center shadow-2xl">
+                  <FaGraduationCap className="text-white text-8xl lg:text-9xl" />
+                </div>
+              </div>
+
+              {/* Right side - Content */}
+              <div className="flex-1">
+                <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+                  Lo Que Su Hijo Logrará
+                </h2>
+                <div className="w-24 h-1.5 bg-green-600 mb-6"></div>
+                <p className="text-xl text-slate-600 mb-8">
+                  Resultados medibles y transformadores
+                </p>
+
+                <div className="space-y-5">
+                  {data.outcomes.map((outcome, index) => (
+                    <div key={index} className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                        <FaCheck className="text-white text-sm" />
+                      </div>
+                      <p className="text-slate-700 text-lg leading-relaxed pt-1">{outcome}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* Testimonial */}
+      {data && (
+        <section className="py-20 bg-white">
+          <div className="max-w-4xl mx-auto px-4">
+            <div className="bg-gradient-to-br from-green-700 to-green-900 rounded-3xl p-8 md:p-12 text-white">
+              <div className="text-6xl mb-6 opacity-50">"</div>
+              <p className="text-xl md:text-2xl leading-relaxed mb-8 italic">
+                {data.testimonial.text}
+              </p>
+              <div className="border-t border-white/20 pt-6">
+                <p className="font-bold text-lg">{data.testimonial.author}</p>
+                <p className="text-green-200">{data.testimonial.role}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Final CTA */}
       <section className="py-20 bg-slate-900 text-white">
