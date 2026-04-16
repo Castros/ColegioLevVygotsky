@@ -1,5 +1,4 @@
 "use client";
-import { navLinks } from "@/lib/data";
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaFacebook, FaInstagram } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,10 +14,10 @@ export default function Footer() {
   ];
 
   const levels = [
-    { name: "Preescolar", href: "/servicios/preescolar" },
-    { name: "Primaria", href: "/servicios/primaria" },
-    { name: "Secundaria", href: "/servicios/secundaria" },
-    { name: "Bolsa de Trabajo", href: "/bolsa-de-trabajo" },
+    { name: "Pre-Kínder", href: "/niveles/pre-kinder" },
+    { name: "Kínder", href: "/niveles/kinder" },
+    { name: "Primaria", href: "/niveles/primaria" },
+    { name: "Secundaria", href: "/niveles/secundaria" },
   ];
 
   return (
