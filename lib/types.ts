@@ -233,6 +233,7 @@ export interface EducationLevel {
   ageRange: string;
   features: EducationLevelFeature[];
   image: StrapiImage;
+  gallery?: StrapiImage[];
   color: string;
   order: number;
   created_at: string;

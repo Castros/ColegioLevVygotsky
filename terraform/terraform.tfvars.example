@@ -1,0 +1,12 @@
+# Copy to terraform.tfvars and fill in values
+# NEVER commit terraform.tfvars to git
+
+do_token            = "dop_v1_YOUR_DIGITALOCEAN_TOKEN"
+client_name         = "clientname"
+environment         = "staging"
+region              = "nyc1"
+droplet_size        = "s-1vcpu-2gb"
+ssh_key_fingerprint = "YOUR:SSH:KEY:FINGERPRINT"
+
+# DNS is managed in AWS Route 53 or Cloudflare — not here.
+# After apply, add an A record manually or use dns-route53.tf.example / dns-cloudflare.tf.example.

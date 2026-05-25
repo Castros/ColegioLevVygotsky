@@ -1,0 +1,24 @@
+{
+  "kind": "singleType",
+  "collectionName": "contact_page",
+  "info": {
+    "singularName": "contact-page",
+    "pluralName": "contact-pages",
+    "displayName": "Contact Page"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "hero_title": { "type": "string", "required": true },
+    "hero_subtitle": { "type": "string" },
+    "address": { "type": "text", "required": true },
+    "phone": { "type": "string", "required": true },
+    "email": { "type": "string", "required": true },
+    "hours": { "type": "text" },
+    "mapUrl": { "type": "text" },
+    "facebook": { "type": "string" },
+    "instagram": { "type": "string" },
+    "whatsapp": { "type": "string" }
+  }
+}

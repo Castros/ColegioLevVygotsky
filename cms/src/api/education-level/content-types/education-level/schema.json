@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "education_levels",
+  "info": {
+    "singularName": "education-level",
+    "pluralName": "education-levels",
+    "displayName": "Education Level"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "slug": { "type": "uid", "targetField": "title", "required": true },
+    "title": { "type": "string", "required": true },
+    "description": { "type": "text", "required": true },
+    "ageRange": { "type": "string", "required": true },
+    "features": { "type": "component", "repeatable": true, "component": "education.feature" },
+    "image": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "gallery": { "type": "media", "multiple": true, "allowedTypes": ["images"] },
+    "color": { "type": "string" },
+    "order": { "type": "integer", "default": 0 }
+  }
+}

@@ -1,0 +1,40 @@
+services:
+  strapi-db:
+    image: postgres:16-alpine
+    container_name: ${CLIENT_NAME:-vigotskyreynosa}-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME:-strapi}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME:-strapi}
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME:-strapi} -d ${DATABASE_NAME:-strapi}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  strapi:
+    container_name: ${CLIENT_NAME:-vigotskyreynosa}-strapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${CLIENT_NAME:-vigotskyreynosa}-strapi:dev
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./config:/opt/app/config
+      - ./src:/opt/app/src
+      - ./tsconfig.json:/opt/app/tsconfig.json
+      - ./package.json:/opt/app/package.json
+      - ./package-lock.json:/opt/app/package-lock.json
+      - ./.env:/opt/app/.env
+      - ./public/uploads:/opt/app/public/uploads
+    ports:
+      - "3200:1337"
+    depends_on:
+      strapi-db:
+        condition: service_healthy

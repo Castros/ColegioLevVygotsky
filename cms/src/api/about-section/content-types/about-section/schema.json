@@ -1,0 +1,20 @@
+{
+  "kind": "singleType",
+  "collectionName": "about_section",
+  "info": {
+    "singularName": "about-section",
+    "pluralName": "about-sections",
+    "displayName": "About Section"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "badge": { "type": "string", "required": true },
+    "title": { "type": "string", "required": true },
+    "description": { "type": "text", "required": true },
+    "image": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "ctaText": { "type": "string", "required": true },
+    "ctaLink": { "type": "string", "required": true }
+  }
+}

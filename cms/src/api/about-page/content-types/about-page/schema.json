@@ -1,0 +1,34 @@
+{
+  "kind": "singleType",
+  "collectionName": "about_page",
+  "info": {
+    "singularName": "about-page",
+    "pluralName": "about-pages",
+    "displayName": "About Page"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "hero_badge": { "type": "string", "required": true },
+    "hero_title": { "type": "string", "required": true },
+    "hero_background": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "main_badge": { "type": "string", "required": true },
+    "main_title": { "type": "string", "required": true },
+    "main_description_1": { "type": "text", "required": true },
+    "main_description_2": { "type": "text" },
+    "main_image": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "mission_badge": { "type": "string" },
+    "mission_title": { "type": "string" },
+    "mission_subtitle": { "type": "string" },
+    "mission_description": { "type": "text" },
+    "values_badge": { "type": "string" },
+    "values_title": { "type": "string" },
+    "values_description": { "type": "text" },
+    "journey_badge": { "type": "string" },
+    "journey_title": { "type": "string" },
+    "journey_description_1": { "type": "text" },
+    "journey_description_2": { "type": "text" },
+    "journey_image": { "type": "media", "multiple": false, "allowedTypes": ["images"] }
+  }
+}

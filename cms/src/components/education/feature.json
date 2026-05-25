@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_education_features",
+  "info": {
+    "displayName": "Feature",
+    "icon": "star"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string",
+      "required": true
+    }
+  }
+}
