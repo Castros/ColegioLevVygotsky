@@ -3,13 +3,12 @@ export default {
 
   async bootstrap({ strapi }: { strapi: any }) {
     strapi.db.lifecycles.subscribe({
-      async afterUpdate(event: any) {
-        // Only fire when an entry is published (publishedAt just got set)
-        const justPublished =
-          event.result?.publishedAt &&
-          event.params?.data?.publishedAt;
+      // Strapi v5: publishing creates a new published version (afterCreate with publishedAt set)
+      async afterCreate(event: any) {
+        const isPublished = !!event.result?.publishedAt;
+        const isContentType = event.model?.uid?.startsWith('api::');
 
-        if (!justPublished) return;
+        if (!isPublished || !isContentType) return;
 
         const token = process.env.GITHUB_TOKEN;
         const repo  = process.env.GITHUB_REPO;
@@ -20,9 +19,14 @@ export default {
           return;
         }
 
+        const workflow = process.env.GITHUB_WORKFLOW || 'deploy-staging.yml';
+        const branch  = process.env.GITHUB_BRANCH  || 'staging';
+
+        strapi.log.info(`[webhook] publish detected on ${event.model.uid} — triggering ${workflow} on ${branch}`);
+
         try {
           const res = await fetch(
-            `https://api.github.com/repos/${repo}/dispatches`,
+            `https://api.github.com/repos/${repo}/actions/workflows/${workflow}/dispatches`,
             {
               method: 'POST',
               headers: {
@@ -31,14 +35,15 @@ export default {
                 'Content-Type': 'application/json',
                 'X-GitHub-Api-Version': '2022-11-28',
               },
-              body: JSON.stringify({ event_type: eventType }),
+              body: JSON.stringify({ ref: branch }),
             }
           );
 
           if (res.ok) {
-            strapi.log.info(`[webhook] GitHub Actions rebuild triggered (${eventType})`);
+            strapi.log.info(`[webhook] GitHub Actions rebuild triggered (${workflow} @ ${branch})`);
           } else {
-            strapi.log.error(`[webhook] GitHub API returned ${res.status}`);
+            const body = await res.text();
+            strapi.log.error(`[webhook] GitHub API returned ${res.status}: ${body}`);
           }
         } catch (err) {
           strapi.log.error('[webhook] Failed to trigger GitHub Actions:', err);

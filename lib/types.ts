@@ -88,12 +88,17 @@ export interface Page {
 // Blog Category Collection Type
 export interface Category {
   id: number;
+  documentId?: string;
   name: string;
   slug: string;
   order?: number | null;
-  created_at: string;
-  updated_at: string;
-  published_at: string;
+  // Strapi v3 (snake_case) and v5 (camelCase) field variants
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
 }
 
 // Blog Post Collection Type
