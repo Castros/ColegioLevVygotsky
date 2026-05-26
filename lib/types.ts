@@ -104,17 +104,22 @@ export interface Category {
 // Blog Post Collection Type
 export interface BlogPost {
   id: number;
+  documentId?: string;
   title: string;
   slug: string;
   excerpt: string;
   content: string;
   featured_image: StrapiImage;
-  category: Category | string; // Can be Category object from Strapi or string from JSON fallback
+  category: Category | string | null;
   published_date: string;
   author?: string | null;
-  created_at: string;
-  updated_at: string;
-  published_at: string;
+  // Strapi v3 (snake_case) and v5 (camelCase) date field variants
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
 }
 
 // Services Collection Type
