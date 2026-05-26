@@ -23,8 +23,8 @@ export interface StrapiImage {
   previewUrl?: string | null;
   provider: string;
   provider_metadata?: any;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface StrapiImageFormat {
@@ -48,9 +48,9 @@ export interface Homepage {
   hero_feature_image: StrapiImage;
   years_experience: number;
   families_count: number;
-  created_at: string;
-  updated_at: string;
-  published_at: string;
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
 }
 
 export interface Gallery {
@@ -58,9 +58,9 @@ export interface Gallery {
   title: string;
   category: string;
   images: StrapiImage[];
-  created_at: string;
-  updated_at: string;
-  published_at: string;
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
 }
 
 export interface Testimonial {
@@ -69,9 +69,9 @@ export interface Testimonial {
   role: string;
   message: string;
   photo?: StrapiImage | null;
-  created_at: string;
-  updated_at: string;
-  published_at: string;
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
 }
 
 export interface Page {
@@ -80,9 +80,9 @@ export interface Page {
   slug: string;
   content: string;
   featured_image?: StrapiImage | null;
-  created_at: string;
-  updated_at: string;
-  published_at: string;
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
 }
 
 // Blog Category Collection Type
@@ -132,9 +132,9 @@ export interface Service {
   image: StrapiImage;
   imagePosition: 'left' | 'right';
   order: number;
-  created_at: string;
-  updated_at: string;
-  published_at: string;
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
 }
 
 // Testimonials Collection Type (extending existing)
@@ -151,9 +151,9 @@ export interface ValueProposition {
   description: string;
   icon?: string | null;
   order: number;
-  created_at: string;
-  updated_at: string;
-  published_at: string;
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
 }
 
 // About Section Single Type
@@ -165,9 +165,9 @@ export interface AboutSection {
   image: StrapiImage;
   ctaText: string;
   ctaLink: string;
-  created_at: string;
-  updated_at: string;
-  published_at: string;
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
 }
 
 // About Page Content Single Type
@@ -193,9 +193,9 @@ export interface AboutPage {
   journey_description_1: string;
   journey_description_2: string;
   journey_image: StrapiImage;
-  created_at: string;
-  updated_at: string;
-  published_at: string;
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
 }
 
 // Services Page Content Single Type
@@ -207,9 +207,9 @@ export interface ServicesPage {
   section_badge: string;
   section_title: string;
   section_description: string;
-  created_at: string;
-  updated_at: string;
-  published_at: string;
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
 }
 
 // CTA Section Single Type
@@ -223,9 +223,9 @@ export interface CTASection {
   secondaryButtonText?: string | null;
   secondaryButtonLink?: string | null;
   backgroundColor: string;
-  created_at: string;
-  updated_at: string;
-  published_at: string;
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
 }
 
 // Education Level Feature Component
@@ -246,9 +246,9 @@ export interface EducationLevel {
   gallery?: StrapiImage[];
   color: string;
   order: number;
-  created_at: string;
-  updated_at: string;
-  published_at: string;
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
 }
 
 // Contact Page Single Type
@@ -264,7 +264,7 @@ export interface ContactPage {
   facebook?: string | null;
   instagram?: string | null;
   whatsapp?: string | null;
-  created_at: string;
-  updated_at: string;
-  published_at: string;
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
 }
