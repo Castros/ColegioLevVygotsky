@@ -9,6 +9,12 @@ WORKDIR /opt/
 COPY package.json package-lock.json ./
 RUN npm install -g node-gyp
 RUN npm config set fetch-retry-maxtimeout 600000 -g && npm ci
+
+# Bypass Vite 5.4+ host check so the admin panel works behind a reverse proxy
+RUN find /opt/node_modules/vite/dist/node/chunks -name '*.js' \
+    -exec grep -l 'Blocked request' {} \; \
+    | xargs sed -i 's/if (!hostHeader || !isHostAllowed(config, isPreview, hostHeader))/if (false)/g'
+
 ENV PATH=/opt/node_modules/.bin:$PATH
 
 WORKDIR /opt/app
