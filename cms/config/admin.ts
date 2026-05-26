@@ -10,4 +10,9 @@ export default ({ env }: { env: any }) => ({
       salt: env('TRANSFER_TOKEN_SALT'),
     },
   },
+  vite: {
+    server: {
+      allowedHosts: [env('STRAPI_DOMAIN', 'localhost'), 'localhost'],
+    },
+  },
 });
