@@ -1,4 +1,4 @@
-# CLAUDE.md — Vigotsky Reynosa
+# AGENTS.md — Vigotsky Reynosa
 
 ## Project
 
