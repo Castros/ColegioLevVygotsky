@@ -1,12 +1,13 @@
 version: '3.8'
 services:
   traefik:
-    image: traefik:v3.0
+    image: traefik:v3
     container_name: traefik
     restart: always
     command:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=strapi-net"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
@@ -16,6 +17,8 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    networks:
+      - strapi-net
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - traefik-letsencrypt:/letsencrypt
@@ -24,6 +27,8 @@ services:
     image: postgres:15-alpine
     container_name: vigotskyreynosa-db
     restart: unless-stopped
+    networks:
+      - strapi-net
     environment:
       POSTGRES_USER: ${DATABASE_USERNAME}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
@@ -63,6 +68,14 @@ services:
       API_TOKEN_SALT: ${API_TOKEN_SALT}
       TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT}
       CORS_ORIGINS: ${CORS_ORIGINS}
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      GITHUB_REPO: ${GITHUB_REPO}
+      GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}
+      GITHUB_BRANCH: ${GITHUB_BRANCH}
+    networks:
+      - strapi-net
+    volumes:
+      - strapi-uploads:/opt/app/public/uploads
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.strapi.rule=Host(`${STRAPI_DOMAIN}`)"
@@ -74,6 +87,10 @@ services:
       - "traefik.http.routers.strapi-http.entrypoints=web"
       - "traefik.http.routers.strapi-http.middlewares=redirect-to-https"
 
+networks:
+  strapi-net:
+
 volumes:
   traefik-letsencrypt:
   postgres-data:
+  strapi-uploads:

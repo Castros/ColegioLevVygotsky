@@ -80,7 +80,10 @@ lambda-webhook/
 
 3. **Output**: `out/` directory is a fully static site uploaded to S3.
 
-4. **Content update flow**: Strapi publish → webhook → `lambda-webhook/` → GitHub Actions dispatch → new build → S3 upload → CloudFront invalidation.
+4. **Content update flow** — two paths, both active:
+   - **New (primary):** Strapi publish → `cms/src/index.ts` lifecycle hook → `workflow_dispatch` → GitHub Actions → new build → S3 → CloudFront invalidation. 8-second debounce built in.
+   - **Legacy:** Strapi HTTP webhook → `lambda-webhook/` (AWS Lambda) → `repository_dispatch` → GitHub Actions. Still works, no debounce.
+   - Both paths trigger the same workflow (`deploy-staging.yml` / `deploy-production.yml`). The lifecycle hook is preferred — no extra AWS infra needed.
 
 ---
 
@@ -170,5 +173,15 @@ Image handling:
 See `AWS-SETUP.md` for full S3/CloudFront setup. See `BLOG-DEPLOYMENT-GUIDE.md` for blog deployment. See `lambda/DEPLOYMENT_GUIDE.md` for contact form Lambda setup.
 
 GitHub Actions workflow is triggered by:
-- Direct push to main
-- `repository_dispatch` event with type `strapi-update` (sent by `lambda-webhook/`)
+- Direct push to main/staging
+- `workflow_dispatch` — fired by `cms/src/index.ts` lifecycle hook (primary, 8s debounce)
+- `repository_dispatch` with type `strapi-update` — fired by `lambda-webhook/` AWS Lambda (legacy, still active)
+
+**Webhook env vars required in Strapi container** (`cms/docker-compose.staging.yml` passes these from `.env`):
+```
+GITHUB_TOKEN=ghp_...           # classic PAT — repo + workflow scopes
+GITHUB_REPO=Castros/ColegioLevVygotsky
+GITHUB_WORKFLOW=deploy-staging.yml
+GITHUB_BRANCH=staging
+```
+Classic PAT (`ghp_`) only — fine-grained tokens return 403 on `workflow_dispatch`.
