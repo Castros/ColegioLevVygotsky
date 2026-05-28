@@ -5,7 +5,9 @@
 Static marketing website for **Colegio Lev Vygotsky** (Vigotsky Reynosa), a private K-12 school in Reynosa, Tamaulipas, México. Content is managed through Strapi CMS and the site is deployed as a fully static export to AWS S3 + CloudFront.
 
 **Live site:** `https://vigotskyreynosa.edu.mx`  
-**CMS:** `https://cms.vigotskyreynosa.edu.mx` (Strapi v3.6.8)
+**CMS:** `https://cms.vigotskyreynosa.edu.mx` (Strapi v5)  
+**CMS admin:** `castrostech@gmail.com`  
+**Droplet:** `128.199.7.34` (shared — other clients may coexist)
 
 ---
 
@@ -15,10 +17,10 @@ Static marketing website for **Colegio Lev Vygotsky** (Vigotsky Reynosa), a priv
 |---|---|
 | Framework | Next.js 16, React 19, TypeScript |
 | Styling | Tailwind CSS v4 |
-| CMS | Strapi v3.6.8 (REST API, no `/api/` prefix) |
+| CMS | Strapi v5 (REST API, `/api/` prefix) |
 | Hosting | AWS S3 + CloudFront (static export) |
 | Contact form | AWS Lambda + API Gateway + SES |
-| Webhook / rebuild | AWS Lambda (`lambda-webhook/`) → GitHub Actions |
+| Webhook / rebuild | Strapi lifecycle hook (`cms/src/index.ts`) → GitHub Actions |
 | Build output | `next build` → `out/` directory (fully static) |
 
 ---
@@ -33,16 +35,15 @@ app/                    # Next.js App Router pages
   blog/                 # Blog listing + [slug] detail
   contacto/             # Contact page
   niveles/[id]/         # Education level detail (kinder, primaria, etc.)
-  api/revalidate/       # DEAD CODE in production (static export)
   sitemap.ts            # Static sitemap (does not include /niveles/* routes)
 components/             # Shared React components
-  HeroStrapi.tsx        # Homepage hero (fetches /homepage from Strapi)
-  ServicesSection.tsx   # Services grid (fetches /services)
-  AboutSection.tsx      # About section (fetches /about-section)
-  CTASection.tsx        # Call-to-action banner (fetches /cta-section)
+  HeroStrapi.tsx        # Homepage hero (fetches /api/homepage from Strapi)
+  ServicesSection.tsx   # Services grid (fetches /api/services)
+  AboutSection.tsx      # About section (fetches /api/about-section)
+  CTASection.tsx        # Call-to-action banner (fetches /api/cta-section)
   TestimonialsSection.tsx
   ValuePropositionSection.tsx
-  NivelesSection.tsx    # Education levels grid (fetches /education-levels)
+  NivelesSection.tsx    # Education levels grid (fetches /api/education-levels)
   MasonryGallery.tsx    # Used inside NivelContent, not standalone
   Navbar.tsx / Footer.tsx / TopBar.tsx
 lib/
@@ -60,11 +61,17 @@ scripts/
   sync-contact-info.js  # Writes lib/site-config.ts from Strapi at build time
   sync-blog-data.js     # Writes data/blog-posts.json + data/categories.json
   download-strapi-images.js  # Downloads Strapi images to public/strapi-images/
-  populate-strapi.js    # One-time script to seed Strapi content
+  add-to-droplet.sh     # Deploys this Strapi to a shared droplet (4 args)
+cms/
+  Dockerfile            # Node 22 Alpine + su-exec entrypoint (fixes upload perms)
+  docker-compose.shared.yml  # Multi-tenant compose — no Traefik, joins external net
+  src/index.ts          # Strapi lifecycle hook → workflow_dispatch (8s debounce)
+  scripts/populate-strapi-v5.js  # One-time seed script (run against production)
+  scripts/fix-strapi-data.js     # Fix/migrate existing Strapi data
 lambda/
   contact-form/         # AWS Lambda for contact form (SES email + rate limiting)
 lambda-webhook/
-  index.js              # AWS Lambda that receives Strapi webhooks → triggers GitHub Actions
+  index.js              # Legacy: AWS Lambda → repository_dispatch → GitHub Actions
 ```
 
 ---
@@ -72,8 +79,8 @@ lambda-webhook/
 ## How the Build Works
 
 1. **Prebuild scripts** run before `next build`:
-   - `sync-contact-info.js` → fetches `/contact-page` from Strapi → writes `lib/site-config.ts`
-   - `sync-blog-data.js` → fetches `/blog-posts` and `/categories` → writes `data/*.json`
+   - `sync-contact-info.js` → fetches `/api/contact-page` from Strapi → writes `lib/site-config.ts`
+   - `sync-blog-data.js` → fetches `/api/blog-posts` and `/api/categories` → writes `data/*.json`
    - `download-strapi-images.js` → downloads all Strapi uploads → saves to `public/strapi-images/`
 
 2. **Build time** (`next build`): all pages fetch Strapi data via `lib/strapi.ts`. Every component has hardcoded fallback data in case Strapi is unreachable.
@@ -81,74 +88,74 @@ lambda-webhook/
 3. **Output**: `out/` directory is a fully static site uploaded to S3.
 
 4. **Content update flow** — two paths, both active:
-   - **New (primary):** Strapi publish → `cms/src/index.ts` lifecycle hook → `workflow_dispatch` → GitHub Actions → new build → S3 → CloudFront invalidation. 8-second debounce built in.
+   - **Primary:** Strapi publish → `cms/src/index.ts` lifecycle hook → `workflow_dispatch` → GitHub Actions → new build → S3 → CloudFront invalidation. 8-second debounce prevents duplicate builds from rapid publishes.
    - **Legacy:** Strapi HTTP webhook → `lambda-webhook/` (AWS Lambda) → `repository_dispatch` → GitHub Actions. Still works, no debounce.
-   - Both paths trigger the same workflow (`deploy-staging.yml` / `deploy-production.yml`). The lifecycle hook is preferred — no extra AWS infra needed.
+   - Both paths trigger `deploy-staging.yml` / `deploy-production.yml`. The lifecycle hook is preferred — no extra AWS infra needed.
 
 ---
 
 ## Strapi Content Types
 
-All endpoints use Strapi v3 format (no `/api/` prefix).
+All endpoints use **Strapi v5 format** (`/api/` prefix, `sort=field:asc`, `populate=*`).
 
 ### Single Types
 | Strapi endpoint | Used by |
 |---|---|
-| `/homepage` | `HeroStrapi.tsx` via `getHomepage()` |
-| `/about-section` | `AboutSection.tsx` |
-| `/about-page` | `app/acerca/page.tsx` |
-| `/services-page` | `app/servicios/page.tsx` |
-| `/cta-section` | `CTASection.tsx` |
-| `/contact-page` | `sync-contact-info.js` at build time (writes `site-config.ts`) |
+| `/api/homepage?populate=*` | `HeroStrapi.tsx` via `getHomepage()` |
+| `/api/about-section?populate=*` | `AboutSection.tsx` |
+| `/api/about-page?populate=*` | `app/acerca/page.tsx` |
+| `/api/services-page?populate=*` | `app/servicios/page.tsx` |
+| `/api/cta-section?populate=*` | `CTASection.tsx` |
+| `/api/contact-page?populate=*` | `sync-contact-info.js` at build time (writes `site-config.ts`) |
 
 ### Collection Types
 | Strapi endpoint | Used by |
 |---|---|
-| `/services?_sort=order:ASC` | `ServicesSection.tsx` + `app/servicios/page.tsx` |
-| `/testimonials?_sort=order:ASC` | `TestimonialsSection.tsx` |
-| `/value-propositions?_sort=order:ASC` | `ValuePropositionSection.tsx` |
-| `/education-levels?_sort=order:ASC` | `NivelesSection.tsx` + `app/niveles/[id]/page.tsx` |
-| `/blog-posts?_sort=published_date:DESC` | synced to `data/blog-posts.json` |
-| `/categories?_sort=order:ASC` | synced to `data/categories.json` |
-| `/galleries` | `getGalleries()` exists in `lib/api.ts` but unused |
+| `/api/services?sort=order:asc&populate=*` | `ServicesSection.tsx` + `app/servicios/page.tsx` |
+| `/api/testimonials?sort=order:asc&populate=*` | `TestimonialsSection.tsx` |
+| `/api/value-propositions?sort=order:asc&populate=*` | `ValuePropositionSection.tsx` |
+| `/api/education-levels?sort=order:asc&populate=*` | `NivelesSection.tsx` + `app/niveles/[id]/page.tsx` |
+| `/api/blog-posts?sort=published_date:desc` | synced to `data/blog-posts.json` |
+| `/api/categories?sort=order:asc` | synced to `data/categories.json` |
+| `/api/galleries` | `getGalleries()` exists in `lib/api.ts` but unused |
 
 ---
 
 ## Environment Variables
 
 ```bash
-# Required for production build
+# Required for production build (GitHub Actions secret)
 NEXT_PUBLIC_STRAPI_URL=https://cms.vigotskyreynosa.edu.mx
 
-# Required for contact form
+# Required for contact form (GitHub Actions secret)
 NEXT_PUBLIC_CONTACT_API_ENDPOINT=https://<API_GATEWAY_URL>/prod/contact
 
-# Used by lambda-webhook / GitHub Actions
-GITHUB_TOKEN=<personal access token>
-GITHUB_REPO=<owner/repo>
-REVALIDATION_SECRET=<random string>  # Only relevant if using the revalidate API route
+# Passed to the Strapi container via cms/.env.prod (gitignored)
+GITHUB_TOKEN=ghp_...           # classic PAT — repo + workflow scopes only
+GITHUB_REPO=Castros/ColegioLevVygotsky
+GITHUB_WORKFLOW=deploy-production.yml
+GITHUB_BRANCH=main
 ```
+
+> Classic PAT (`ghp_`) only — fine-grained tokens return 403 on `workflow_dispatch`.
 
 ---
 
 ## Known Gaps / Missing Features
 
 ### 1. Contact page uses hardcoded hours
-`app/contacto/page.tsx` uses `siteConfig` (which IS synced from Strapi at build time), but the `hours` field from Strapi's `/contact-page` is hardcoded in JSX. Should use `getContactInfo()` from `lib/contact.ts` to also pull the `hours` field dynamically.
+`app/contacto/page.tsx` uses `siteConfig` (which IS synced from Strapi at build time), but the `hours` field from Strapi's `/api/contact-page` is hardcoded in JSX. Should use `getContactInfo()` from `lib/contact.ts` to also pull the `hours` field dynamically.
 
 ### 2. No gallery page
 `MasonryGallery.tsx` component and `getGalleries()` + `getGalleryByCategory()` functions exist but there is no `/galeria` page. The component is currently only used inside `app/niveles/[id]/NivelContent.tsx`.
 
-### 3. `app/api/revalidate/route.ts` is dead code
-`next.config.ts` uses `output: 'export'` which does NOT support runtime API routes. This file never executes in production. The actual webhook → rebuild trigger lives in `lambda-webhook/index.js`.
-
-### 4. Blog hero is hardcoded
+### 3. Blog hero is hardcoded
 `app/blog/page.tsx` has a hardcoded hero (title "Nuestro Blog Escolar", background image). No Strapi content type drives it.
 
-### 5. Sitemap missing dynamic routes
+### 4. Sitemap missing dynamic routes
 `app/sitemap.ts` does not include `/niveles/kinder`, `/niveles/primaria`, etc. or individual blog post URLs.
 
-### 6. Contact form endpoint not configured
+### 5. Contact form endpoint not configured
 `app/contacto/ContactForm.tsx` falls back to `"https://YOUR_API_GATEWAY_URL/prod/contact"` if `NEXT_PUBLIC_CONTACT_API_ENDPOINT` is not set. The Lambda + API Gateway must be deployed and the env var configured in GitHub Actions secrets.
 
 ---
@@ -170,18 +177,28 @@ Image handling:
 
 ## Deployment
 
-See `AWS-SETUP.md` for full S3/CloudFront setup. See `BLOG-DEPLOYMENT-GUIDE.md` for blog deployment. See `lambda/DEPLOYMENT_GUIDE.md` for contact form Lambda setup.
+### Infrastructure
+- **Droplet:** `128.199.7.34` — shared DigitalOcean droplet with Traefik + Postgres
+- **Traefik network:** `web` (pass as 4th arg to `add-to-droplet.sh`)
+- **Remote path:** `/opt/strapi/vigotskyreynosa/`
 
-GitHub Actions workflow is triggered by:
-- Direct push to main/staging
+### Deploy CMS to droplet
+```bash
+./scripts/add-to-droplet.sh 128.199.7.34 vigotskyreynosa cms/.env.prod web
+```
+
+### Seed / repopulate Strapi content
+```bash
+STRAPI_URL=https://cms.vigotskyreynosa.edu.mx \
+STRAPI_ADMIN_EMAIL=castrostech@gmail.com \
+STRAPI_ADMIN_PASSWORD=<password> \
+node cms/scripts/populate-strapi-v5.js
+```
+
+### Frontend build triggers
+- Push to `main` → `deploy-production.yml` → S3 (`us-west-2`) + CloudFront invalidation
+- Push to `staging` → `deploy-staging.yml`
 - `workflow_dispatch` — fired by `cms/src/index.ts` lifecycle hook (primary, 8s debounce)
-- `repository_dispatch` with type `strapi-update` — fired by `lambda-webhook/` AWS Lambda (legacy, still active)
+- `repository_dispatch` type `strapi-update` — fired by `lambda-webhook/` (legacy, still active)
 
-**Webhook env vars required in Strapi container** (`cms/docker-compose.staging.yml` passes these from `.env`):
-```
-GITHUB_TOKEN=ghp_...           # classic PAT — repo + workflow scopes
-GITHUB_REPO=Castros/ColegioLevVygotsky
-GITHUB_WORKFLOW=deploy-staging.yml
-GITHUB_BRANCH=staging
-```
-Classic PAT (`ghp_`) only — fine-grained tokens return 403 on `workflow_dispatch`.
+See `lambda/DEPLOYMENT_GUIDE.md` for contact form Lambda setup.
