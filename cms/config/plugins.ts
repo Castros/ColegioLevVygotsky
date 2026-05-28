@@ -5,6 +5,24 @@ export default ({ env }: { env: any }) => {
     seo: {
       enabled: true,
     },
+    email: {
+      config: {
+        provider: 'nodemailer',
+        providerOptions: {
+          host: 'smtp.resend.com',
+          port: 465,
+          secure: true,
+          auth: {
+            user: 'resend',
+            pass: env('RESEND_API_KEY'),
+          },
+        },
+        settings: {
+          defaultFrom: 'info@fransolution.net',
+          defaultReplyTo: 'info@fransolution.net',
+        },
+      },
+    },
     ...(useS3 && {
       upload: {
         config: {
