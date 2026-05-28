@@ -1,0 +1,55 @@
+name: Deploy — Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:    # triggered by Strapi webhook (cms/src/index.ts)
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prebuild
+        run: npm run prebuild
+        env:
+          NEXT_PUBLIC_STRAPI_URL: ${{ secrets.NEXT_PUBLIC_STRAPI_URL }}
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_STRAPI_URL: ${{ secrets.NEXT_PUBLIC_STRAPI_URL }}
+          NEXT_PUBLIC_CONTACT_API_ENDPOINT: ${{ secrets.NEXT_PUBLIC_CONTACT_API_ENDPOINT }}
+
+      - name: Deploy to S3
+        run: aws s3 sync out/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-west-2
+
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-west-2

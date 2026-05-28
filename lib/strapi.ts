@@ -1,236 +1,165 @@
 /**
- * Strapi API utilities for v3.6.8
+ * Strapi API utilities for v5
  */
 
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://cms.vigotskyreynosa.edu.mx';
 
-/**
- * Helper function to build Strapi API URLs
- */
 export function getStrapiURL(path: string = ''): string {
   return `${STRAPI_URL}${path}`;
 }
 
-/**
- * Helper to fetch data from Strapi
- */
+// Strapi v5 wraps all responses in { data: ... }
+export function unwrapCollection<T = any>(res: any): T[] {
+  return res?.data ?? [];
+}
+
+export function unwrapSingle<T = any>(res: any): T | null {
+  return res?.data ?? null;
+}
+
 export async function fetchAPI(path: string, options: RequestInit = {}) {
   const defaultOptions: RequestInit = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    // In development: use no-cache to see changes immediately
-    // In production: use force-cache for static exports
+    headers: { 'Content-Type': 'application/json' },
+    // In development: no-cache so Strapi changes appear immediately
+    // In production: force-cache for static exports
     cache: process.env.NODE_ENV === 'development' ? 'no-cache' : 'force-cache',
   };
 
   const mergedOptions = {
     ...defaultOptions,
     ...options,
-    headers: {
-      ...defaultOptions.headers,
-      ...options.headers,
-    },
+    headers: { ...defaultOptions.headers, ...options.headers },
   };
 
-  const requestUrl = getStrapiURL(path);
+  const response = await fetch(getStrapiURL(path), mergedOptions);
 
-  console.log(`[Strapi Fetch] Fetching: ${requestUrl}`);
-  console.log(`[Strapi Fetch] STRAPI_URL env: ${STRAPI_URL}`);
-
-  try {
-    const response = await fetch(requestUrl, mergedOptions);
-
-    console.log(`[Strapi Fetch] Response status: ${response.status}`);
-
-    if (!response.ok) {
-      console.error(`Strapi API error: ${response.status} ${response.statusText}`);
-      throw new Error(`Failed to fetch from Strapi: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    console.log(`[Strapi Fetch] Success! Data received for ${path}`);
-    return data;
-  } catch (error) {
-    console.error(`[Strapi Fetch] ERROR for ${path}:`, error);
-    throw error;
+  if (!response.ok) {
+    throw new Error(`Strapi API error: ${response.status} ${response.statusText}`);
   }
+
+  return response.json();
 }
 
 /**
  * Helper to get image URL from Strapi
- * In Strapi v3, images can be relative or absolute
  *
  * In production builds:
  * - Images are downloaded from Strapi during build time
  * - URLs are rewritten to point to local /strapi-images/ folder
- * - Everything is deployed to S3 (fully static)
  *
  * In development:
  * - Images are fetched directly from Strapi URL
- * - Allows seeing image changes immediately
  */
 export function getStrapiMedia(url: string | null | undefined): string | null {
   if (!url) return null;
-
-  // If it's already a full URL, return it
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    return url;
-  }
-
-  // If it's a Strapi upload (starts with /uploads/)
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
   if (url.startsWith('/uploads/')) {
-    // In production build: rewrite to local path (images downloaded during build)
-    // In development: fetch from Strapi directly (see changes immediately)
     if (process.env.NODE_ENV === 'production') {
-      // Extract filename from Strapi URL
       const filename = url.split('/').pop();
       return `/strapi-images/${filename}`;
-    } else {
-      // Development: fetch from Strapi
-      return getStrapiURL(url);
     }
+    return getStrapiURL(url);
   }
-
-  // Otherwise it's a local image (from fallback data) - return as-is
   return url;
 }
 
-/**
- * Fetch Services (Collection Type)
- * Strapi v3 endpoint: /services (no /api prefix)
- */
+// Collection types — all use /api/ prefix, sort=field:asc, populate=*
 export async function getServices() {
   try {
-    const data = await fetchAPI('/services?_sort=order:ASC');
-    return data;
+    const res = await fetchAPI('/api/services?sort=order:asc&populate=*');
+    return unwrapCollection(res);
   } catch (error) {
     console.error('Error fetching services:', error);
     return [];
   }
 }
 
-/**
- * Fetch Testimonials (Collection Type)
- * Strapi v3 endpoint: /testimonials
- */
 export async function getTestimonials() {
   try {
-    const data = await fetchAPI('/testimonials?_sort=order:ASC');
-    return data;
+    const res = await fetchAPI('/api/testimonials?sort=order:asc&populate=*');
+    return unwrapCollection(res);
   } catch (error) {
     console.error('Error fetching testimonials:', error);
     return [];
   }
 }
 
-/**
- * Fetch Value Propositions (Collection Type)
- * Strapi v3 endpoint: /value-propositions
- */
 export async function getValuePropositions() {
   try {
-    const data = await fetchAPI('/value-propositions?_sort=order:ASC');
-    return data;
+    const res = await fetchAPI('/api/value-propositions?sort=order:asc&populate=*');
+    return unwrapCollection(res);
   } catch (error) {
     console.error('Error fetching value propositions:', error);
     return [];
   }
 }
 
-/**
- * Fetch About Section (Single Type)
- * Strapi v3 endpoint: /about-section
- */
-export async function getAboutSection() {
-  try {
-    const data = await fetchAPI('/about-section');
-    return data;
-  } catch (error) {
-    console.error('Error fetching about section:', error);
-    return null;
-  }
-}
-
-/**
- * Fetch About Page Content (Single Type)
- * Strapi v3 endpoint: /about-page
- */
-export async function getAboutPage() {
-  try {
-    const data = await fetchAPI('/about-page');
-    return data;
-  } catch (error) {
-    console.error('Error fetching about page:', error);
-    return null;
-  }
-}
-
-/**
- * Fetch Services Page Content (Single Type)
- * Strapi v3 endpoint: /services-page
- */
-export async function getServicesPage() {
-  try {
-    const data = await fetchAPI('/services-page');
-    return data;
-  } catch (error) {
-    console.error('Error fetching services page:', error);
-    // Return null gracefully - the page will use fallback data
-    return null;
-  }
-}
-
-/**
- * Fetch CTA Section (Single Type)
- * Strapi v3 endpoint: /cta-section
- */
-export async function getCTASection() {
-  try {
-    const data = await fetchAPI('/cta-section');
-    return data;
-  } catch (error) {
-    console.error('Error fetching CTA section:', error);
-    return null;
-  }
-}
-
-/**
- * Fetch Education Levels (Collection Type)
- * Strapi v3 endpoint: /education-levels
- */
 export async function getEducationLevels() {
   try {
-    const data = await fetchAPI('/education-levels?_sort=order:ASC');
-    return data;
+    const res = await fetchAPI('/api/education-levels?sort=order:asc&populate=*');
+    return unwrapCollection(res);
   } catch (error) {
     console.error('Error fetching education levels:', error);
     return [];
   }
 }
 
-/**
- * Fetch Single Education Level by slug (Collection Type)
- * Strapi v3 endpoint: /education-levels
- */
 export async function getEducationLevelBySlug(slug: string) {
   try {
-    const data = await fetchAPI(`/education-levels?slug=${slug}`);
-    return data && data.length > 0 ? data[0] : null;
+    const res = await fetchAPI(`/api/education-levels?filters[slug][$eq]=${slug}&populate=*`);
+    const items = unwrapCollection<any>(res);
+    return items.length > 0 ? items[0] : null;
   } catch (error) {
     console.error(`Error fetching education level ${slug}:`, error);
     return null;
   }
 }
 
-/**
- * Fetch Contact Page (Single Type)
- * Strapi v3 endpoint: /contact-page
- */
+// Single types — all use /api/ prefix, populate=*
+export async function getAboutSection() {
+  try {
+    const res = await fetchAPI('/api/about-section?populate=*');
+    return unwrapSingle(res);
+  } catch (error) {
+    console.error('Error fetching about section:', error);
+    return null;
+  }
+}
+
+export async function getAboutPage() {
+  try {
+    const res = await fetchAPI('/api/about-page?populate=*');
+    return unwrapSingle(res);
+  } catch (error) {
+    console.error('Error fetching about page:', error);
+    return null;
+  }
+}
+
+export async function getServicesPage() {
+  try {
+    const res = await fetchAPI('/api/services-page?populate=*');
+    return unwrapSingle(res);
+  } catch (error) {
+    console.error('Error fetching services page:', error);
+    return null;
+  }
+}
+
+export async function getCTASection() {
+  try {
+    const res = await fetchAPI('/api/cta-section?populate=*');
+    return unwrapSingle(res);
+  } catch (error) {
+    console.error('Error fetching CTA section:', error);
+    return null;
+  }
+}
+
 export async function getContactPage() {
   try {
-    const data = await fetchAPI('/contact-page');
-    return data;
+    const res = await fetchAPI('/api/contact-page?populate=*');
+    return unwrapSingle(res);
   } catch (error) {
     console.error('Error fetching contact page:', error);
     return null;

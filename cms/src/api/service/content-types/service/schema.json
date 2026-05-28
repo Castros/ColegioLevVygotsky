@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "services",
+  "info": {
+    "singularName": "service",
+    "pluralName": "services",
+    "displayName": "Service"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "number": { "type": "string", "required": true },
+    "title": { "type": "string", "required": true },
+    "description": { "type": "text", "required": true },
+    "shortDescription": { "type": "text" },
+    "image": { "type": "media", "multiple": false, "required": true, "allowedTypes": ["images"] },
+    "imagePosition": { "type": "enumeration", "enum": ["left", "right"], "default": "left", "required": true },
+    "order": { "type": "integer", "default": 0, "required": true }
+  }
+}

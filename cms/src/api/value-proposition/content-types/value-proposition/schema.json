@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "value_propositions",
+  "info": {
+    "singularName": "value-proposition",
+    "pluralName": "value-propositions",
+    "displayName": "Value Proposition"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "description": { "type": "text", "required": true },
+    "icon": { "type": "string" },
+    "order": { "type": "integer", "default": 0 }
+  }
+}

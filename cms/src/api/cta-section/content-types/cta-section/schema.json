@@ -1,0 +1,22 @@
+{
+  "kind": "singleType",
+  "collectionName": "cta_section",
+  "info": {
+    "singularName": "cta-section",
+    "pluralName": "cta-sections",
+    "displayName": "CTA Section"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "badge": { "type": "string" },
+    "title": { "type": "string", "required": true },
+    "description": { "type": "text", "required": true },
+    "primaryButtonText": { "type": "string", "required": true },
+    "primaryButtonLink": { "type": "string", "required": true },
+    "secondaryButtonText": { "type": "string" },
+    "secondaryButtonLink": { "type": "string" },
+    "backgroundColor": { "type": "string", "default": "#15803d" }
+  }
+}

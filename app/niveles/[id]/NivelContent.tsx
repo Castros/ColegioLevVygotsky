@@ -10,8 +10,8 @@ interface NivelContentProps {
   nivel: EducationLevel;
 }
 
-// Photo galleries for each nivel (keyed by slug)
-const nivelGalleries: Record<string, string[]> = {
+// Static fallback galleries — used when Strapi gallery field is empty
+const fallbackGalleries: Record<string, string[]> = {
   "pre-kinder": [
     "/images/gallery-kinder/kinder-1.png",
     "/images/gallery-kinder/kinder-2.png",
@@ -340,9 +340,13 @@ export default function NivelContent({ nivel }: NivelContentProps) {
         </section>
       )}
 
-      {/* Masonry Gallery */}
+      {/* Masonry Gallery — Strapi gallery field first, static fallback if empty */}
       <MasonryGallery
-        images={nivelGalleries[nivel.slug] || []}
+        images={
+          nivel.gallery && nivel.gallery.length > 0
+            ? nivel.gallery.map((img) => getStrapiMedia(img.url) || img.url)
+            : fallbackGalleries[nivel.slug] || []
+        }
         nivel={nivel.title}
       />
 

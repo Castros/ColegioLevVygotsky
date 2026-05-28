@@ -1,0 +1,63 @@
+# Production compose — joins the shared Traefik network
+# Designed for Terraform parameterization: all values come from env vars
+# Usage: docker compose -f docker-compose.prod.yml up -d
+
+services:
+  strapi-db:
+    image: postgres:15-alpine
+    container_name: ${CLIENT_NAME}-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - /root/clients/${CLIENT_NAME}/postgres:/var/lib/postgresql/data
+    networks:
+      - web
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  strapi:
+    build: .
+    image: ${CLIENT_NAME}-strapi:${IMAGE_TAG:-latest}
+    container_name: ${CLIENT_NAME}-strapi
+    restart: unless-stopped
+    environment:
+      HOST: 0.0.0.0
+      PORT: 1337
+      NODE_ENV: production
+      PUBLIC_URL: https://${STRAPI_DOMAIN}
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: ${CLIENT_NAME}-db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${DB_NAME}
+      DATABASE_USERNAME: ${DB_USER}
+      DATABASE_PASSWORD: ${DB_PASSWORD}
+      DATABASE_SSL: false
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      APP_KEYS: ${APP_KEYS}
+      API_TOKEN_SALT: ${API_TOKEN_SALT}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+    volumes:
+      - /root/clients/${CLIENT_NAME}/uploads:/opt/app/public/uploads
+    networks:
+      - web
+    depends_on:
+      strapi-db:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${CLIENT_NAME}-strapi.rule=Host(`${STRAPI_DOMAIN}`)"
+      - "traefik.http.routers.${CLIENT_NAME}-strapi.entrypoints=websecure"
+      - "traefik.http.routers.${CLIENT_NAME}-strapi.tls.certresolver=myresolver"
+      - "traefik.http.services.${CLIENT_NAME}-strapi.loadbalancer.server.port=1337"
+
+networks:
+  web:
+    external: true

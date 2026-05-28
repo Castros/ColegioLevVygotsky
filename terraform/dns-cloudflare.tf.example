@@ -1,0 +1,43 @@
+# dns-cloudflare.tf.example
+# Rename to dns-cloudflare.tf to have Terraform manage the DNS record in Cloudflare.
+# Requires: cloudflare provider added to main.tf + API token in tfvars.
+
+# Add to terraform {} block in main.tf:
+#   cloudflare = {
+#     source  = "cloudflare/cloudflare"
+#     version = "~> 4.0"
+#   }
+
+# Add to main.tf providers:
+#   provider "cloudflare" {
+#     api_token = var.cloudflare_api_token
+#   }
+
+data "cloudflare_zone" "main" {
+  name = var.domain
+}
+
+resource "cloudflare_record" "strapi" {
+  zone_id = data.cloudflare_zone.main.id
+  name    = var.subdomain
+  value   = digitalocean_droplet.strapi.ipv4_address
+  type    = "A"
+  ttl     = 300
+  proxied = false  # set true to route through Cloudflare proxy
+}
+
+# Add these to variables.tf when using this file:
+#
+# variable "domain" {
+#   description = "Root domain in Cloudflare (e.g. vigotskyreynosa.edu.mx)"
+#   type        = string
+# }
+# variable "subdomain" {
+#   description = "Subdomain for Strapi (e.g. cms-staging)"
+#   type        = string
+# }
+# variable "cloudflare_api_token" {
+#   description = "Cloudflare API token with Zone:DNS:Edit permission"
+#   type        = string
+#   sensitive   = true
+# }

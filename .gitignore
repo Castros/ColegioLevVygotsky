@@ -42,3 +42,6 @@ next-env.d.ts
 
 # strapi images (downloaded during build)
 /public/strapi-images
+
+# terraform secrets — never commit
+terraform/terraform.tfvars

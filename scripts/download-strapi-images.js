@@ -11,14 +11,10 @@ const http = require('http');
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://cms.vigotskyreynosa.edu.mx';
 const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'strapi-images');
 
-// Ensure output directory exists
 if (!fs.existsSync(OUTPUT_DIR)) {
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 }
 
-/**
- * Download a file from URL to local path
- */
 function downloadFile(url, outputPath) {
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith('https') ? https : http;
@@ -33,7 +29,6 @@ function downloadFile(url, outputPath) {
           resolve();
         });
       } else if (response.statusCode === 301 || response.statusCode === 302) {
-        // Handle redirects
         downloadFile(response.headers.location, outputPath)
           .then(resolve)
           .catch(reject);
@@ -45,7 +40,7 @@ function downloadFile(url, outputPath) {
 }
 
 /**
- * Fetch data from Strapi API
+ * Fetch data from Strapi v5 API — unwraps { data: ... } wrapper automatically
  */
 async function fetchFromStrapi(endpoint) {
   return new Promise((resolve, reject) => {
@@ -55,14 +50,15 @@ async function fetchFromStrapi(endpoint) {
     protocol.get(url, (response) => {
       let data = '';
 
-      response.on('data', (chunk) => {
-        data += chunk;
-      });
+      response.on('data', (chunk) => { data += chunk; });
 
       response.on('end', () => {
         if (response.statusCode === 200) {
           try {
-            resolve(JSON.parse(data));
+            const json = JSON.parse(data);
+            // Strapi v5: unwrap { data: [...] } for collections, { data: {...} } for single types
+            const unwrapped = json?.data ?? json;
+            resolve(unwrapped);
           } catch (error) {
             reject(new Error(`Failed to parse JSON from ${endpoint}`));
           }
@@ -77,6 +73,7 @@ async function fetchFromStrapi(endpoint) {
 
 /**
  * Extract image objects from Strapi data
+ * Works for both collections (arrays) and single types (objects)
  */
 function extractImages(data, images = []) {
   if (!data) return images;
@@ -84,47 +81,38 @@ function extractImages(data, images = []) {
   if (Array.isArray(data)) {
     data.forEach(item => extractImages(item, images));
   } else if (typeof data === 'object') {
-    // Check if this is an image object (has url and formats)
+    // Image object: has url and (formats or mime)
     if (data.url && (data.formats || data.mime)) {
       images.push(data);
     }
-
-    // Recursively check all properties
     Object.values(data).forEach(value => extractImages(value, images));
   }
 
   return images;
 }
 
-/**
- * Download all images from a Strapi image object (including formats)
- */
 async function downloadStrapiImage(imageObj) {
   const downloads = [];
 
-  // Download main image
   if (imageObj.url) {
     const url = imageObj.url.startsWith('http')
       ? imageObj.url
       : `${STRAPI_URL}${imageObj.url}`;
     const filename = path.basename(imageObj.url);
     const outputPath = path.join(OUTPUT_DIR, filename);
-
     if (!fs.existsSync(outputPath)) {
       downloads.push(downloadFile(url, outputPath));
     }
   }
 
-  // Download format variations (thumbnail, small, medium, large)
   if (imageObj.formats) {
-    for (const [formatName, format] of Object.entries(imageObj.formats)) {
+    for (const [, format] of Object.entries(imageObj.formats)) {
       if (format.url) {
         const url = format.url.startsWith('http')
           ? format.url
           : `${STRAPI_URL}${format.url}`;
         const filename = path.basename(format.url);
         const outputPath = path.join(OUTPUT_DIR, filename);
-
         if (!fs.existsSync(outputPath)) {
           downloads.push(downloadFile(url, outputPath));
         }
@@ -135,32 +123,29 @@ async function downloadStrapiImage(imageObj) {
   return Promise.all(downloads);
 }
 
-/**
- * Main function
- */
 async function main() {
   console.log('🚀 Starting Strapi image download...');
   console.log(`📡 Strapi URL: ${STRAPI_URL}`);
   console.log(`📁 Output directory: ${OUTPUT_DIR}\n`);
 
   try {
-    // List of all Strapi endpoints to fetch
+    // Strapi v5: all endpoints use /api/ prefix, populate=* to include media
     const endpoints = [
-      '/homepage',
-      '/services',
-      '/testimonials',
-      '/value-propositions',
-      '/about-section',
-      '/about-page',
-      '/services-page',
-      '/cta-section',
-      '/education-levels',
-      '/contact-page',
+      '/api/homepage?populate=*',
+      '/api/services?populate=*',
+      '/api/testimonials?populate=*',
+      '/api/value-propositions?populate=*',
+      '/api/about-section?populate=*',
+      '/api/about-page?populate=*',
+      '/api/services-page?populate=*',
+      '/api/cta-section?populate=*',
+      '/api/education-levels?populate=*',
+      '/api/contact-page?populate=*',
+      '/api/blog-posts?populate=*',
     ];
 
     let allImages = [];
 
-    // Fetch data from all endpoints
     for (const endpoint of endpoints) {
       console.log(`📥 Fetching: ${endpoint}`);
       const data = await fetchFromStrapi(endpoint);
@@ -172,7 +157,6 @@ async function main() {
       }
     }
 
-    // Remove duplicates (same image ID)
     const uniqueImages = Array.from(
       new Map(allImages.map(img => [img.id || img.url, img])).values()
     );
@@ -180,7 +164,6 @@ async function main() {
     console.log(`\n📊 Total unique images found: ${uniqueImages.length}`);
     console.log('⬇️  Downloading images...\n');
 
-    // Download all images
     for (const image of uniqueImages) {
       try {
         await downloadStrapiImage(image);
@@ -194,8 +177,7 @@ async function main() {
 
   } catch (error) {
     console.error('❌ Error:', error.message);
-
-    // Don't fail the build - just warn
+    // Don't fail the build — images have fallbacks
     console.warn('⚠️  Continuing with build (will use fallback images if needed)');
     process.exit(0);
   }
