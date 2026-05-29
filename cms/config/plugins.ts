@@ -9,17 +9,17 @@ export default ({ env }: { env: any }) => {
       config: {
         provider: 'nodemailer',
         providerOptions: {
-          host: 'smtp.resend.com',
+          host: 'email-smtp.us-east-1.amazonaws.com',
           port: 465,
           secure: true,
           auth: {
-            user: 'resend',
-            pass: env('RESEND_API_KEY'),
+            user: env('SES_SMTP_USER'),
+            pass: env('SES_SMTP_PASSWORD'),
           },
         },
         settings: {
-          defaultFrom: 'info@fransolution.net',
-          defaultReplyTo: 'info@fransolution.net',
+          defaultFrom: 'no-reply@vigotskyreynosa.edu.mx',
+          defaultReplyTo: 'castrostech@gmail.com',
         },
       },
     },
