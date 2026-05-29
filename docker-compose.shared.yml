@@ -36,6 +36,8 @@ services:
       GITHUB_REPO: ${GITHUB_REPO}
       GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}
       GITHUB_BRANCH: ${GITHUB_BRANCH}
+      SES_SMTP_USER: ${SES_SMTP_USER}
+      SES_SMTP_PASSWORD: ${SES_SMTP_PASSWORD}
     networks:
       - strapi-net
     volumes:
