@@ -10,8 +10,8 @@ export default ({ env }: { env: any }) => {
         provider: 'nodemailer',
         providerOptions: {
           host: 'email-smtp.us-east-1.amazonaws.com',
-          port: 465,
-          secure: true,
+          port: 2587,
+          secure: false,
           auth: {
             user: env('SES_SMTP_USER'),
             pass: env('SES_SMTP_PASSWORD'),
