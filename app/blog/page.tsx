@@ -24,6 +24,7 @@ export default async function BlogPage() {
         <div className="container mx-auto p-4 md:p-8">
           <div
             className="flex min-h-[400px] flex-col gap-6 items-center justify-center rounded-xl md:rounded-xl bg-cover bg-center bg-no-repeat p-6 text-center"
+            data-reveal="fade"
             style={{
               backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.5) 0%, rgba(15, 23, 42, 0.7) 100%), url("/images/colored-pencils-on-beige-surface.jpeg")`
             }}

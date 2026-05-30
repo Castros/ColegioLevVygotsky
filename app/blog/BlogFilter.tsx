@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Image from "next/image";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { getStrapiMedia } from "@/lib/strapi";
 import type { BlogPost, Category } from "@/lib/types";
 
@@ -43,16 +44,18 @@ export function BlogFilter({ posts, categories }: BlogFilterProps) {
       <div className="lg:col-span-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredPosts.length > 0 ? (
-            filteredPosts.map((post) => (
+            filteredPosts.map((post, index) => (
               <Link
                 key={post.id}
                 href={`/blog/${post.slug}`}
                 className="flex flex-col gap-3 pb-3 bg-white rounded-xl p-4 transition-shadow hover:shadow-lg border border-slate-200"
+                data-reveal="item"
+                style={{ "--reveal-delay": `${Math.min(index * 60, 180)}ms` } as CSSProperties}
               >
                 <div className="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg relative overflow-hidden">
                   {post.featured_image && (
                     <Image
-                      src={getStrapiMedia(post.featured_image.url) || '/images/placeholder.jpg'}
+                      src={getStrapiMedia(post.featured_image.url) || '/images/afuera-de-escuela.png'}
                       alt={post.featured_image.alternativeText || post.title}
                       fill
                       className="object-cover"
@@ -91,7 +94,7 @@ export function BlogFilter({ posts, categories }: BlogFilterProps) {
       </div>
 
       {/* Sidebar */}
-      <aside className="lg:col-span-4 space-y-8 lg:sticky lg:top-24 h-fit">
+      <aside className="lg:col-span-4 space-y-8 lg:sticky lg:top-24 h-fit" data-reveal="fade">
         {/* Search Bar */}
         <div>
           <label className="flex flex-col min-w-40 h-12 w-full">

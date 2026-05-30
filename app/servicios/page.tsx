@@ -1,6 +1,7 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import { getServices, getServicesPage, getStrapiMedia } from "@/lib/strapi";
-import { Service } from "@/lib/types";
+import { Service, StrapiImage } from "@/lib/types";
 
 export const metadata = {
   title: "Servicios - Vigotsky Reynosa",
@@ -10,19 +11,30 @@ export const metadata = {
 export default async function ServicesPage() {
   // Fetch services and page content from Strapi
   const servicesData: Service[] = await getServices();
-  console.log('[ServicesPage] Fetched services count:', servicesData.length);
-  console.log('[ServicesPage] Services data:', JSON.stringify(servicesData));
   const pageData = await getServicesPage();
 
   // Fallback services data
-  const fallbackServices = [
+  const fallbackImage = (url: string): StrapiImage => ({
+    id: 0,
+    name: url.split("/").pop() || "fallback-image",
+    width: 0,
+    height: 0,
+    hash: "",
+    ext: url.split(".").pop() ? `.${url.split(".").pop()}` : "",
+    mime: "",
+    size: 0,
+    url,
+    provider: "local",
+  });
+
+  const fallbackServices: Service[] = [
     {
       id: 1,
       number: "01.",
       title: "Plan de Estudios Integral",
       description: "Nuestro Plan de Estudios Integral está diseñado para nutrir mentes jóvenes a través de una combinación de métodos de enseñanza tradicionales e innovadores. Nos enfocamos en el pensamiento crítico, la creatividad y la inteligencia emocional, asegurando que cada estudiante desarrolle habilidades esenciales para el futuro. Adaptado para satisfacer diversos estilos de aprendizaje, nuestro plan de estudios crea un entorno atractivo donde los estudiantes prosperan académica y socialmente. Con materias enfocadas que van desde las artes hasta las ciencias, fomentamos el amor por el aprendizaje y alentamos la exploración de por vida. Nuestros educadores dedicados están comprometidos a guiar a cada niño en su viaje educativo, estableciendo una base sólida para el éxito futuro.",
       shortDescription: "",
-      image: { url: "/images/girl-learning.jpg" } as any,
+      image: fallbackImage("/images/girl-learning.jpg"),
       imagePosition: "left" as const,
       order: 1,
       created_at: "",
@@ -35,7 +47,7 @@ export default async function ServicesPage() {
       title: "Actividades Extracurriculares",
       description: "En Vigotsky Reynosa, nuestro programa de Actividades Extracurriculares enriquece la experiencia educativa de los estudiantes más allá del aula. Ofrecemos una amplia gama de clubes y clases, incluyendo deportes, artes y música, permitiendo a los estudiantes explorar sus pasiones y desarrollar nuevas habilidades. La participación en estas actividades fomenta el trabajo en equipo, el liderazgo y la interacción social, fomentando un sentido de comunidad entre los estudiantes. Guiados por instructores experimentados, los niños ganan confianza y creatividad mientras equilibran lo académico con actividades placenteras. Estos programas son cruciales para el crecimiento personal, asegurando que cada niño se desarrolle holísticamente como individuo.",
       shortDescription: "",
-      image: { url: "/images/kids-playing.png" } as any,
+      image: fallbackImage("/images/kids-playing.png"),
       imagePosition: "right" as const,
       order: 2,
       created_at: "",
@@ -48,7 +60,7 @@ export default async function ServicesPage() {
       title: "Estancia",
       description: "Nuestro programa de Estancia proporciona un ambiente seguro y enriquecedor para los estudiantes después del horario escolar. Priorizamos la seguridad mientras aseguramos que los niños participen en actividades divertidas y educativas. Nuestro personal dedicado supervisa a los estudiantes, ofreciendo asistencia con la tarea, proyectos creativos y tiempo de juego recreativo. Este programa no solo apoya a las familias trabajadoras, sino que también fomenta las interacciones sociales entre compañeros. Alentamos la autoexpresión y la colaboración a través de diversas actividades grupales que estimulan el aprendizaje. Con un enfoque en el bienestar, nuestra Estancia asegura que los estudiantes se sientan valorados y apoyados en un entorno comunitario.",
       shortDescription: "",
-      image: { url: "/images/boy-holiding-dinosaure.png" } as any,
+      image: fallbackImage("/images/boy-holiding-dinosaure.png"),
       imagePosition: "left" as const,
       order: 3,
       created_at: "",
@@ -61,7 +73,7 @@ export default async function ServicesPage() {
       title: "Métodos de Enseñanza Progresivos",
       description: "En Vigotsky Reynosa, adoptamos Métodos de Enseñanza Progresivos que priorizan la participación del estudiante y el aprendizaje activo. Nuestro enfoque combina experiencias prácticas con proyectos colaborativos, permitiendo a los estudiantes tomar posesión de su educación. Al integrar tecnología y aplicaciones del mundo real, hacemos que el aprendizaje sea relevante y emocionante. Nuestros educadores están capacitados en técnicas innovadoras que atienden diversos estilos de aprendizaje, asegurando que cada niño pueda prosperar. Creemos en fomentar el pensamiento crítico y las habilidades de resolución de problemas, preparando a los estudiantes para los desafíos del mañana. Este compromiso con la educación progresiva empodera a los estudiantes para convertirse en aprendices de por vida y ciudadanos globales responsables.",
       shortDescription: "",
-      image: { url: "/images/kid-working.jpeg" } as any,
+      image: fallbackImage("/images/kid-working.jpeg"),
       imagePosition: "right" as const,
       order: 4,
       created_at: "",
@@ -100,7 +112,7 @@ export default async function ServicesPage() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 py-20 w-full text-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 py-20 w-full text-center" data-reveal="fade">
           <p className="text-white text-sm md:text-base font-medium tracking-wider mb-4 uppercase">
             {heroData.hero_badge}
           </p>
@@ -114,8 +126,8 @@ export default async function ServicesPage() {
       <div className="bg-white">
         {services.map((service, index) => {
           const serviceImageUrl = service.image?.url
-            ? getStrapiMedia(service.image.url)
-            : service.image;
+            ? getStrapiMedia(service.image.url) || service.image.url
+            : "/images/afuera-de-escuela.png";
 
           return (
             <section
@@ -133,11 +145,12 @@ export default async function ServicesPage() {
                     className={`flex justify-center ${
                       service.imagePosition === "right" ? "lg:col-start-2" : ""
                     }`}
+                    data-reveal={service.imagePosition === "right" ? "slide-left" : "slide-right"}
                   >
                     <div className="w-full max-w-md aspect-square">
                       <div className="w-full h-full rounded-[50%] overflow-hidden shadow-2xl relative">
                         <Image
-                          src={serviceImageUrl || "/images/placeholder.jpg"}
+                          src={serviceImageUrl || "/images/afuera-de-escuela.png"}
                           alt={service.title}
                           fill
                           className="object-cover"
@@ -152,6 +165,8 @@ export default async function ServicesPage() {
                     className={`text-center lg:text-left ${
                       service.imagePosition === "right" ? "lg:col-start-1 lg:row-start-1" : ""
                     }`}
+                    data-reveal={service.imagePosition === "right" ? "slide-right" : "slide-left"}
+                    style={{ "--reveal-delay": "60ms" } as CSSProperties}
                   >
                     <p className="text-3xl font-bold text-green-600 mb-2">
                       {service.number}

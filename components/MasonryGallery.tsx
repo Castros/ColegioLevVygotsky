@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import Image from "next/image";
 
 interface MasonryGalleryProps {
@@ -8,20 +8,23 @@ interface MasonryGalleryProps {
 }
 
 export default function MasonryGallery({ images, nivel }: MasonryGalleryProps) {
-  const [shuffledImages, setShuffledImages] = useState<string[]>([]);
+  const shuffledImages = useMemo(
+    () =>
+      [...images].sort((a, b) => {
+        const hash = (value: string) =>
+          [...value].reduce((total, char) => total + char.charCodeAt(0), 0);
 
-  useEffect(() => {
-    // Shuffle images on mount for random order
-    const shuffled = [...images].sort(() => Math.random() - 0.5);
-    setShuffledImages(shuffled);
-  }, [images]);
+        return hash(a) - hash(b);
+      }),
+    [images]
+  );
 
   if (shuffledImages.length === 0) {
     return null;
   }
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-white" data-reveal="fade">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">

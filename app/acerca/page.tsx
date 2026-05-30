@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import CTASection from "@/components/CTASection";
 import { getAboutPage, getStrapiMedia } from "@/lib/strapi";
 
@@ -66,7 +67,7 @@ export default async function AboutPage() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 py-20 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 py-20 w-full" data-reveal="fade">
           <div className="max-w-2xl">
             <p className="text-white text-sm md:text-base font-medium tracking-wider mb-4 uppercase">
               {data.hero_badge}
@@ -83,7 +84,7 @@ export default async function AboutPage() {
         <div className="container mx-auto px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left - Arched Rectangle Image */}
-            <div className="flex justify-center lg:justify-start">
+            <div className="flex justify-center lg:justify-start" data-reveal="slide-right">
               <div className="relative w-[350px] h-[450px] lg:w-[400px] lg:h-[500px]">
                 {/* Arched rectangle image container */}
                 <div className="absolute inset-0 rounded-t-full overflow-hidden shadow-2xl">
@@ -99,7 +100,7 @@ export default async function AboutPage() {
             </div>
 
             {/* Right - Content */}
-            <div className="text-center lg:text-left">
+            <div className="text-center lg:text-left" data-reveal="slide-left">
               <p className="text-sm font-bold tracking-widest uppercase text-slate-600 mb-2">
                 {data.main_badge}
               </p>
@@ -121,7 +122,7 @@ export default async function AboutPage() {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             {/* Left - Sticky Header */}
-            <div className="lg:sticky lg:top-24">
+            <div className="lg:sticky lg:top-24" data-reveal="slide-right">
               <p className="text-sm font-semibold tracking-wider uppercase text-slate-600">
                 {data.mission_badge}
               </p>
@@ -133,7 +134,7 @@ export default async function AboutPage() {
 
             {/* Right - Content */}
             <div className="space-y-12">
-              <div>
+              <div data-reveal="item">
                 <h3 className="text-sm font-semibold tracking-wider uppercase text-slate-600">
                   NUESTRA MISIÓN
                 </h3>
@@ -147,7 +148,7 @@ export default async function AboutPage() {
 
               <hr className="border-slate-300" />
 
-              <div className="mb-8">
+              <div className="mb-8" data-reveal="item" style={{ "--reveal-delay": "60ms" } as CSSProperties}>
                 <h3 className="text-sm font-semibold tracking-wider uppercase text-slate-600">
                   {data.values_badge}
                 </h3>
@@ -166,7 +167,7 @@ export default async function AboutPage() {
       {/* Overlapping Image - positioned between sections */}
       <div className="bg-white -mt-24 lg:-mt-32 pt-1">
         <div className="container mx-auto px-6">
-          <div className="relative w-full h-[300px] md:h-[400px] lg:h-[500px] rounded-t-2xl overflow-hidden shadow-2xl">
+          <div className="relative w-full h-[300px] md:h-[400px] lg:h-[500px] rounded-t-2xl overflow-hidden shadow-2xl" data-reveal="scale">
             <Image
               src={journeyImageUrl || "/images/kids-playing.png"}
               alt="Niños en actividad creativa en el aula"
@@ -183,7 +184,7 @@ export default async function AboutPage() {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             {/* Left - Sticky Header */}
-            <div className="lg:sticky lg:top-24">
+            <div className="lg:sticky lg:top-24" data-reveal="slide-right">
               <p className="text-sm font-semibold tracking-wider uppercase text-slate-600">
                 {data.journey_badge}
               </p>
@@ -194,7 +195,7 @@ export default async function AboutPage() {
             </div>
 
             {/* Right - Content */}
-            <div className="space-y-8 text-slate-700 leading-relaxed">
+            <div className="space-y-8 text-slate-700 leading-relaxed" data-reveal="item">
               <p>{data.journey_description_1}</p>
               <p>{data.journey_description_2}</p>
             </div>

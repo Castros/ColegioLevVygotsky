@@ -25,7 +25,7 @@ export default async function AboutSection() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Circular Image */}
-          <div className="flex justify-center lg:justify-start">
+          <div className="flex justify-center lg:justify-start" data-reveal="slide-right">
             <div className="relative w-[400px] h-[400px] lg:w-[500px] lg:h-[500px]">
               <div className="absolute inset-0 rounded-full overflow-hidden shadow-2xl">
                 <Image
@@ -40,7 +40,7 @@ export default async function AboutSection() {
           </div>
 
           {/* Right Column - Content */}
-          <div>
+          <div data-reveal="slide-left">
             <p className="text-sm font-semibold text-slate-600 uppercase tracking-wider mb-4">
               {data.badge}
             </p>

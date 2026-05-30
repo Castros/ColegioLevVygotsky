@@ -25,6 +25,7 @@ export default async function CTASection() {
       <div className="max-w-6xl mx-auto">
         <div
           className="rounded-3xl px-8 py-16 text-center"
+          data-reveal="scale"
           style={{ backgroundColor: data.backgroundColor || fallbackData.backgroundColor }}
         >
           {data.badge && (

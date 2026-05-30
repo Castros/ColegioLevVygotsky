@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { getServices } from "@/lib/strapi";
 import { Service } from "@/lib/types";
 
@@ -38,7 +39,7 @@ export default async function ServicesSection() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-start">
           {/* Left Column - Header */}
-          <div>
+          <div data-reveal="slide-right">
             <p className="text-sm font-semibold text-slate-600 uppercase tracking-wider mb-4">
               NUESTRA OFERTA EDUCATIVA
             </p>
@@ -54,7 +55,12 @@ export default async function ServicesSection() {
           {/* Right Column - Services Grid */}
           <div className="grid md:grid-cols-2 gap-8">
             {displayServices.map((service, index) => (
-              <div key={service.id || index} className="space-y-3">
+              <div
+                key={service.id || index}
+                className="space-y-3"
+                data-reveal="item"
+                style={{ "--reveal-delay": `${Math.min(index * 60, 180)}ms` } as CSSProperties}
+              >
                 <div className="text-3xl font-bold text-green-600">
                   {service.number}
                 </div>

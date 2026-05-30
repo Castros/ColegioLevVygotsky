@@ -32,7 +32,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <section className="container mx-auto px-4 md:px-8 py-6">
         <div className="max-w-6xl mx-auto">
           {/* Page Heading */}
-          <div className="flex flex-wrap justify-between gap-3 mb-6">
+          <div className="flex flex-wrap justify-between gap-3 mb-6" data-reveal="fade">
             <div className="flex min-w-72 flex-col gap-2">
               <h1 className="text-slate-900 text-3xl lg:text-4xl font-black leading-tight tracking-tight">
                 {post.title}
@@ -53,9 +53,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </div>
 
           {/* Header Image */}
-          <div className="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden rounded-xl h-64 lg:h-80 mb-6 relative">
+          <div className="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden rounded-xl h-64 lg:h-80 mb-6 relative" data-reveal="scale">
             <Image
-              src={getStrapiMedia(post.featured_image.url) || '/images/placeholder.jpg'}
+              src={getStrapiMedia(post.featured_image.url) || '/images/afuera-de-escuela.png'}
               alt={post.featured_image.alternativeText || post.title}
               fill
               className="object-cover"
@@ -68,7 +68,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             {/* Body Text */}
             <div className="col-span-12 lg:col-span-9">
               {/* Excerpt */}
-              <div className="mb-6">
+              <div className="mb-6" data-reveal="fade">
                 <p className="text-lg text-slate-900 font-medium leading-relaxed">
                   {post.excerpt}
                 </p>
@@ -84,7 +84,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
               {/* Related Posts */}
               {relatedPosts.length > 0 && (
-                <div className="mt-10 pt-6 border-t border-gray-200">
+                <div className="mt-10 pt-6 border-t border-gray-200" data-reveal="fade">
                   <h2 className="text-xl font-bold text-slate-900 mb-4">
                     Artículos Relacionados
                   </h2>
@@ -94,11 +94,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         key={relatedPost.id}
                         href={`/blog/${relatedPost.slug}`}
                         className="flex flex-col gap-2 bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-md transition-shadow"
+                        data-reveal="item"
                       >
                         <div className="w-full bg-center bg-no-repeat aspect-video bg-cover relative">
                           {relatedPost.featured_image && (
                             <Image
-                              src={getStrapiMedia(relatedPost.featured_image.url) || '/images/placeholder.jpg'}
+                              src={getStrapiMedia(relatedPost.featured_image.url) || '/images/afuera-de-escuela.png'}
                               alt={relatedPost.featured_image.alternativeText || relatedPost.title}
                               fill
                               className="object-cover"

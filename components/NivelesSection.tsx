@@ -1,15 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import { getEducationLevels, getStrapiMedia } from "@/lib/strapi";
 import { EducationLevel } from "@/lib/types";
 import { niveles } from "@/data/niveles";
 
 const fallbackImages: Record<string, string> = {
-  "pre-kinder": "/images/kinder-students.jpg",
-  kinder: "/images/kinder-students.jpg",
-  primaria: "/images/primaria-students.jpg",
-  secundaria: "/images/secundaria-students.jpg",
+  "pre-kinder": "/images/hero-kinder-bg.png",
+  kinder: "/images/kids-playing.png",
+  primaria: "/images/kid-working.jpeg",
+  secundaria: "/images/girl-learning.jpg",
 };
+
+const defaultFallbackImage = "/images/afuera-de-escuela.png";
 
 export default async function NivelesSection() {
   const strapiLevels: EducationLevel[] = await getEducationLevels();
@@ -24,7 +27,7 @@ export default async function NivelesSection() {
           imageUrl:
             getStrapiMedia(n.image?.url) ||
             fallbackImages[n.slug] ||
-            "/images/placeholder.jpg",
+            defaultFallbackImage,
         }))
       : niveles.map((n, i) => ({
           slug: n.id,
@@ -32,23 +35,27 @@ export default async function NivelesSection() {
           ageRange: n.ageRange,
           description: n.description,
           imageUrl:
-            Object.values(fallbackImages)[i] || "/images/placeholder.jpg",
+            Object.values(fallbackImages)[i] || defaultFallbackImage,
         }));
 
   return (
     <section className="py-20 bg-white" id="niveles">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-slate-900">
-          Nuestros Niveles Educativos
-        </h2>
-        <div className="w-16 h-1 bg-green-600 mx-auto mb-12"></div>
+        <div data-reveal="fade">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-slate-900">
+            Nuestros Niveles Educativos
+          </h2>
+          <div className="w-16 h-1 bg-green-600 mx-auto mb-12"></div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
-          {levels.map((nivel) => (
+          {levels.map((nivel, index) => (
             <Link
               key={nivel.slug}
               href={`/niveles/${nivel.slug}`}
               className="relative group flex flex-col items-center"
+              data-reveal="item"
+              style={{ "--reveal-delay": `${Math.min(index * 60, 180)}ms` } as CSSProperties}
             >
               {/* Circular Card */}
               <div className="w-64 h-64 rounded-full overflow-hidden relative shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">

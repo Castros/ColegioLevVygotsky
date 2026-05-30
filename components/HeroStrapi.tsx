@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import { getHomepage } from "@/lib/api";
 import { getStrapiMedia } from "@/lib/strapi";
 
@@ -38,7 +39,7 @@ export default async function HeroStrapi() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-20 w-full">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Text Content */}
-          <div className="text-left">
+          <div className="text-left" data-reveal="fade">
             {/* Small heading */}
             <p className="text-white text-sm md:text-base font-medium tracking-wider mb-4 uppercase">
               {heroData.subtitle}
@@ -64,7 +65,7 @@ export default async function HeroStrapi() {
           </div>
 
           {/* Right Column - Arched Rectangle Image */}
-          <div className="flex justify-center lg:justify-end">
+          <div className="flex justify-center lg:justify-end" data-reveal="slide-left">
             <div className="relative w-[350px] h-[450px] lg:w-[400px] lg:h-[500px]">
               {/* Arched rectangle image container */}
               <div className="absolute inset-0 rounded-t-full overflow-hidden border-8 border-white/10 shadow-2xl">
@@ -82,13 +83,13 @@ export default async function HeroStrapi() {
 
         {/* Stats Section - Below Hero Content */}
         <div className="grid grid-cols-2 md:grid-cols-2 gap-8 mt-16 max-w-xl">
-          <div>
+          <div data-reveal="item" style={{ "--reveal-delay": "120ms" } as CSSProperties}>
             <div className="text-white text-4xl md:text-5xl font-bold mb-2">
               {heroData.yearsExperience}+
             </div>
             <div className="text-white/80 text-sm md:text-base">Año de Experiencia</div>
           </div>
-          <div>
+          <div data-reveal="item" style={{ "--reveal-delay": "180ms" } as CSSProperties}>
             <div className="text-white text-4xl md:text-5xl font-bold mb-2">
               {heroData.familiesCount}+
             </div>

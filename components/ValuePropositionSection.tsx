@@ -1,5 +1,6 @@
 import { FaCheck } from "react-icons/fa";
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import { getValuePropositions } from "@/lib/strapi";
 import { ValueProposition } from "@/lib/types";
 
@@ -31,7 +32,7 @@ export default async function ValuePropositionSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Column - Content */}
           <div className="flex flex-col gap-8">
-            <div>
+            <div data-reveal="slide-right">
               <p className="text-sm font-semibold tracking-wider uppercase text-slate-600 mb-2">
                 LO QUE NOS HACE ÚNICOS
               </p>
@@ -43,7 +44,11 @@ export default async function ValuePropositionSection() {
 
             <div className="space-y-8">
               {values.map((value, index) => (
-                <div key={index}>
+                <div
+                  key={index}
+                  data-reveal="item"
+                  style={{ "--reveal-delay": `${Math.min(index * 60, 180)}ms` } as CSSProperties}
+                >
                   <div className="flex items-start gap-4">
                     <FaCheck className="text-green-700 mt-1 text-xl flex-shrink-0" />
                     <div>
@@ -64,7 +69,7 @@ export default async function ValuePropositionSection() {
           </div>
 
           {/* Right Column - Image */}
-          <div className="relative h-[500px] lg:h-[600px] flex items-center justify-center">
+          <div className="relative h-[500px] lg:h-[600px] flex items-center justify-center" data-reveal="slide-left">
             <div className="relative w-[350px] h-full lg:w-[400px] rounded-t-full overflow-hidden shadow-2xl bg-white">
               <Image
                 src="/images/boy-holiding-dinosaure.png"

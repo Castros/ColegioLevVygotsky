@@ -85,8 +85,20 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
 
     let animationId: number | null = null;
     let scrollPosition = 0;
+    let isPointerPaused = false;
+    let isFocusPaused = false;
+    let isVisible = false;
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const canScroll = () =>
+      isVisible && !isPointerPaused && !isFocusPaused && !motionQuery.matches;
 
     const scroll = () => {
+      if (!canScroll()) {
+        animationId = null;
+        return;
+      }
+
       scrollPosition += 1;
 
       // Reset scroll position when reaching halfway (creates seamless loop)
@@ -99,9 +111,8 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
       animationId = requestAnimationFrame(scroll);
     };
 
-    // Start animation
     const startScroll = () => {
-      if (animationId === null) {
+      if (animationId === null && canScroll()) {
         animationId = requestAnimationFrame(scroll);
       }
     };
@@ -113,31 +124,68 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
       }
     };
 
-    // Pause on hover
     const handleMouseEnter = () => {
+      isPointerPaused = true;
       stopScroll();
     };
 
     const handleMouseLeave = () => {
+      isPointerPaused = false;
       startScroll();
     };
 
-    // Start initial animation
-    startScroll();
+    const handleFocusIn = () => {
+      isFocusPaused = true;
+      stopScroll();
+    };
+
+    const handleFocusOut = () => {
+      isFocusPaused = false;
+      startScroll();
+    };
+
+    const handleMotionChange = () => {
+      if (!motionQuery.matches) {
+        startScroll();
+      } else {
+        stopScroll();
+      }
+    };
+
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) {
+          startScroll();
+        } else {
+          stopScroll();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    visibilityObserver.observe(scrollContainer);
 
     scrollContainer.addEventListener('mouseenter', handleMouseEnter);
     scrollContainer.addEventListener('mouseleave', handleMouseLeave);
+    scrollContainer.addEventListener('focusin', handleFocusIn);
+    scrollContainer.addEventListener('focusout', handleFocusOut);
+    motionQuery.addEventListener("change", handleMotionChange);
 
     return () => {
       stopScroll();
+      visibilityObserver.disconnect();
       scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
       scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
+      scrollContainer.removeEventListener('focusin', handleFocusIn);
+      scrollContainer.removeEventListener('focusout', handleFocusOut);
+      motionQuery.removeEventListener("change", handleMotionChange);
     };
   }, []);
 
   return (
     <section className="py-20 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 mb-12">
+      <div className="max-w-7xl mx-auto px-4 mb-12" data-reveal="fade">
         {/* Header */}
         <div className="text-center">
           <p className="text-sm font-semibold text-slate-600 uppercase tracking-wider mb-4">
@@ -153,7 +201,7 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
       {/* Auto-scrolling testimonials */}
       <div
         ref={scrollRef}
-        className="flex gap-8 overflow-x-hidden px-4"
+        className="flex gap-8 overflow-x-auto md:overflow-x-hidden px-4 focus-within:overflow-x-auto"
         style={{ scrollBehavior: 'auto' }}
       >
         {duplicatedTestimonials.map((testimonial, index) => {
@@ -182,7 +230,7 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
 
               {/* Text */}
               <p className="text-slate-700 text-sm md:text-base leading-relaxed italic text-center mb-6 line-clamp-4">
-                "{testimonial.text || testimonial.message}"
+                &quot;{testimonial.text || testimonial.message}&quot;
               </p>
 
               {/* Author */}
@@ -201,7 +249,7 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
 
       {/* Hint text */}
       <p className="text-center text-slate-500 text-sm mt-8">
-        Pasa el cursor sobre las tarjetas para pausar
+        Pasa el cursor, enfoca o desplaza horizontalmente para revisar las opiniones
       </p>
     </section>
   );

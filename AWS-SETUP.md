@@ -1,418 +1,293 @@
-# AWS S3 + CloudFront Setup Guide
+# CLAUDE.md — Vigotsky Reynosa
 
-This guide will walk you through setting up S3 bucket and CloudFront distribution for your static Next.js site.
+## Project
 
-## Prerequisites
-- AWS Account
-- Domain: vigotskyreynosa.edu.mx (already in Route53)
-- AWS CLI installed (optional, for testing)
-
----
-
-## Part 1: Create S3 Bucket
-
-### Step 1: Create the S3 Bucket
-
-1. Go to **AWS Console** → **S3**
-2. Click **Create bucket**
-
-**Bucket settings:**
-- **Bucket name**: `vigotskyreynosa-website` (must be globally unique)
-- **Region**: `us-east-1` (or your preferred region)
-- **Object Ownership**: ACLs disabled (recommended)
-- **Block Public Access settings**:
-  - ✅ Block all public access (we'll use CloudFront)
-- **Bucket Versioning**: Disabled (optional, can enable for rollback capability)
-- **Default encryption**: Enable (Server-side encryption with Amazon S3 managed keys)
-
-3. Click **Create bucket**
-
-### Step 2: Configure Bucket for Static Website (Optional)
-
-Since we're using CloudFront, this is optional but can be useful for testing.
-
-1. Go to your bucket → **Properties** tab
-2. Scroll to **Static website hosting**
-3. Click **Edit**
-4. Select **Enable**
-5. **Index document**: `index.html`
-6. **Error document**: `404.html`
-7. Click **Save changes**
+| | |
+|---|---|
+| **Name** | vigotskyreynosa |
+| **Client** | Colegio Lev Vygotsky — private K-12 school in Reynosa, Tamaulipas, México |
+| **Live site** | https://vigotskyreynosa.edu.mx |
+| **CMS URL** | https://cms.vigotskyreynosa.edu.mx |
+| **CMS admin** | castrostech@gmail.com |
+| **Type** | nextjs-static |
+| **CMS** | Strapi v5 (yes) |
+| **Repo** | Castros/ColegioLevVygotsky |
+| **Droplet** | 128.199.7.34 (shared — Traefik network `web`) |
 
 ---
 
-## Part 2: Create CloudFront Distribution
+## Progress
 
-### Step 1: Create Distribution
+- [x] **Phase 1 — Site built** — Next.js app complete, all pages (home, about, services, blog, contact, niveles), static export verified
+- [x] **Phase 2 — AWS infrastructure** — S3 + CloudFront (prod + staging) with OAC, private buckets
+- [x] **Phase 3 — GitHub Actions** — push to staging/main triggers build → S3 → CloudFront invalidation, confirmed working
+- [x] **Phase 4 — DNS** — domain pointed to CloudFront, SSL valid, site live at vigotskyreynosa.edu.mx
+- [x] **Phase 5 — Strapi v5** — migrated from v3.6.8 to v5, all content types defined, seeded with placeholder data
+- [x] **Phase 6 — Wired up** — all components fetch from Strapi v5 (`/api/` prefix), fallback to hardcoded data confirmed
+- [x] **Phase 7 — Strapi deployed** — Strapi v5 on shared droplet (128.199.7.34), public API accessible at cms.vigotskyreynosa.edu.mx
+- [ ] **Phase 8 — Pipeline tested** — publish in Strapi → lifecycle hook → GitHub Actions → new build → live
+- [ ] **Phase 9 — Real content** — placeholder data replaced with real school content, real images uploaded
+- [ ] **Phase 10 — Contact form** — Lambda + API Gateway deployed, NEXT_PUBLIC_CONTACT_API_ENDPOINT set in GitHub secrets
+- [ ] **Phase 11 — Handoff** — staff trained on Strapi admin, old v3 postgres container removed from droplet
 
-1. Go to **AWS Console** → **CloudFront**
-2. Click **Create distribution**
+**Right now: Phases 1–7 complete. Strapi v5 live and seeded. Next: Phase 8 — test full publish → webhook → rebuild pipeline.**
 
-### Origin Settings:
+---
 
-- **Origin domain**: Select your S3 bucket from dropdown
-  - Example: `vigotskyreynosa-website.s3.us-east-1.amazonaws.com`
-- **Origin path**: Leave empty
-- **Name**: Auto-filled (keep it)
-- **Origin access**: **Origin access control settings (recommended)**
-  - Click **Create control setting**
-  - Name: `vigotskyreynosa-oac`
-  - Click **Create**
-- **Enable Origin Shield**: No
+## How this project works end-to-end
 
-### Default Cache Behavior Settings:
+```
+Content editor publishes in Strapi
+  → cms/src/index.ts fires afterCreate/afterUpdate lifecycle hook
+  → 8-second debounce (multiple publishes within 8s = one build)
+  → GitHub workflow_dispatch → triggers deploy-production.yml
+  → GitHub Actions: npm ci → prebuild scripts → npm run build → aws s3 sync → CloudFront invalidation
+  → Live site updated (~3–4 minutes after publish)
 
-- **Viewer protocol policy**: Redirect HTTP to HTTPS
-- **Allowed HTTP methods**: GET, HEAD
-- **Cache policy**: CachingOptimized (Recommended for S3)
-- **Origin request policy**: None
-- **Response headers policy**: None
+Prebuild scripts (run before next build):
+  → scripts/sync-contact-info.js   fetches /api/contact-page → writes lib/site-config.ts
+  → scripts/sync-blog-data.js      fetches /api/blog-posts + /api/categories → writes data/*.json
+  → scripts/download-strapi-images.js  downloads all Strapi uploads → public/strapi-images/
 
-### Settings:
+If Strapi is unreachable during build:
+  → Prebuild scripts warn and skip
+  → Build uses hardcoded fallback data in each component
+  → Site never goes down because of CMS issues
+```
 
-- **Price class**: Use all edge locations (best performance)
-  - Or choose "Use only North America and Europe" to save costs
-- **Alternate domain name (CNAME)**:
-  - Add: `vigotskyreynosa.edu.mx`
-  - Add: `www.vigotskyreynosa.edu.mx`
-- **Custom SSL certificate**:
-  - Click **Request certificate** (this will open ACM in new tab)
-  - See Step 2 below for SSL setup
-- **Default root object**: `index.html`
-- **Standard logging**: Off (or enable for analytics)
+> The legacy Lambda webhook (`lambda-webhook/index.js`) also exists and still works.
+> It fires a `repository_dispatch` event instead of `workflow_dispatch`.
+> The **lifecycle hook is preferred** — no extra AWS infra needed, has debounce.
 
-3. Click **Create distribution**
+---
 
-**Important**: Copy the distribution ID - you'll need it for GitHub Actions!
+## Stack
 
-Example: `E1234ABCDEFGH`
+| Layer | Technology | Notes |
+|---|---|---|
+| Framework | Next.js 16, TypeScript, App Router | `output: 'export'` — fully static |
+| Styling | Tailwind CSS v4 | |
+| CMS | Strapi v5 on Docker | Self-hosted on shared DigitalOcean droplet |
+| Database | PostgreSQL 16 in Docker | Runs alongside Strapi |
+| Reverse proxy | Traefik | Auto SSL via Let's Encrypt, network `web` |
+| Hosting | AWS S3 + CloudFront (`us-west-2`) | Static files, CloudFront CDN |
+| CI/CD | GitHub Actions | deploy-production.yml, deploy-staging.yml |
+| Rebuild trigger | Strapi lifecycle hook → workflow_dispatch | 8s debounce, classic PAT required |
+| Contact form | AWS Lambda + API Gateway + SES | Lambda in `lambda/contact-form/` |
 
-### Step 2: Request SSL Certificate (ACM)
+---
 
-**IMPORTANT**: SSL certificates for CloudFront MUST be created in **us-east-1** region!
+## Local development
 
-1. Go to **AWS Console** → **Certificate Manager**
-2. **Change region to us-east-1** (top right)
-3. Click **Request certificate**
-4. Select **Request a public certificate**
-5. Click **Next**
+```bash
+# Start Strapi + PostgreSQL locally
+docker compose -f cms/docker-compose.local.yml up --build
 
-**Domain names:**
-- Add: `vigotskyreynosa.edu.mx`
-- Click **Add another name**
-- Add: `*.vigotskyreynosa.edu.mx`
+# Start Next.js (separate terminal)
+npm run dev
+```
 
-**Validation method**: DNS validation
+- Strapi admin: http://localhost:1337/admin (create account on first run)
+- Next.js: http://localhost:3000
+- Set `NEXT_PUBLIC_STRAPI_URL=http://localhost:1337` in `.env`
+- First `docker compose up --build` takes ~5 minutes (Strapi admin compilation)
 
-6. Click **Request**
+---
 
-### Step 3: Validate SSL Certificate
+## Deploy CMS to droplet
 
-1. Click on your certificate
-2. Click **Create records in Route 53** (since your domain is already in Route53)
-3. Check both domains
-4. Click **Create records**
-5. Wait 5-10 minutes for validation (status will change to "Issued")
+```bash
+# From project root
+./scripts/add-to-droplet.sh 128.199.7.34 vigotskyreynosa cms/.env.prod web
+```
 
-### Step 4: Attach SSL to CloudFront
+`add-to-droplet.sh` (4 args: IP, client name, env file, Traefik network):
+- Verifies SSH, Docker, named network, swap (adds 2GB if missing)
+- rsync `cms/` to `/opt/strapi/vigotskyreynosa/cms/` (excludes node_modules, .git, data)
+- Copies `docker-compose.shared.yml` and `.env`
+- Runs `docker compose up -d --build`
 
-1. Go back to **CloudFront** → Your distribution
-2. Click **Edit**
-3. **Custom SSL certificate**: Select your newly issued certificate
-4. Click **Save changes**
+Watch logs after deploy:
+```bash
+ssh root@128.199.7.34 "docker logs vigotskyreynosa-strapi -f"
+```
 
-### Step 5: Update S3 Bucket Policy
+---
 
-CloudFront needs permission to access your S3 bucket.
+## Seed / repopulate Strapi content
 
-1. Go to **CloudFront** → Your distribution
-2. Click on the **Origins** tab
-3. You should see a banner: "The S3 bucket policy needs to be updated"
-4. Click **Copy policy**
-5. Go to **S3** → Your bucket → **Permissions** tab
-6. Scroll to **Bucket policy**
-7. Click **Edit**
-8. Paste the policy
-9. Click **Save changes**
+```bash
+# Run from project root
+STRAPI_URL=https://cms.vigotskyreynosa.edu.mx \
+STRAPI_ADMIN_EMAIL=castrostech@gmail.com \
+STRAPI_ADMIN_PASSWORD=<password> \
+node cms/scripts/populate-strapi-v5.js
+```
 
-Example policy (you'll get this from CloudFront):
-```json
-{
-    "Version": "2008-10-17",
-    "Id": "PolicyForCloudFrontPrivateContent",
-    "Statement": [
-        {
-            "Sid": "AllowCloudFrontServicePrincipal",
-            "Effect": "Allow",
-            "Principal": {
-                "Service": "cloudfront.amazonaws.com"
-            },
-            "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::vigotskyreynosa-website/*",
-            "Condition": {
-                "StringEquals": {
-                    "AWS:SourceArn": "arn:aws:cloudfront::YOUR_ACCOUNT_ID:distribution/YOUR_DISTRIBUTION_ID"
-                }
-            }
-        }
-    ]
+Seeds: images from `public/strapi-images/`, blog posts from `data/blog-posts.json`, categories, services, testimonials, value propositions, education levels, all single types. Sets public read permissions automatically.
+
+---
+
+## Strapi content types
+
+All endpoints use **Strapi v5 format** — `/api/` prefix, `sort=field:asc`, `populate=*`.
+
+### Single types
+| Endpoint | Used by |
+|---|---|
+| `/api/homepage?populate=*` | `HeroStrapi.tsx` via `getHomepage()` |
+| `/api/about-section?populate=*` | `AboutSection.tsx` |
+| `/api/about-page?populate=*` | `app/acerca/page.tsx` |
+| `/api/services-page?populate=*` | `app/servicios/page.tsx` |
+| `/api/cta-section?populate=*` | `CTASection.tsx` |
+| `/api/contact-page?populate=*` | `sync-contact-info.js` → `lib/site-config.ts` |
+
+### Collection types
+| Endpoint | Used by |
+|---|---|
+| `/api/services?sort=order:asc&populate=*` | `ServicesSection.tsx` + `app/servicios/page.tsx` |
+| `/api/testimonials?sort=order:asc&populate=*` | `TestimonialsSection.tsx` |
+| `/api/value-propositions?sort=order:asc&populate=*` | `ValuePropositionSection.tsx` |
+| `/api/education-levels?sort=order:asc&populate=*` | `NivelesSection.tsx` + `app/niveles/[id]/page.tsx` |
+| `/api/blog-posts?sort=published_date:desc` | synced to `data/blog-posts.json` |
+| `/api/categories?sort=order:asc` | synced to `data/categories.json` |
+
+---
+
+## File map
+
+```
+app/
+  page.tsx                    ← homepage — assembles all section components
+  acerca/page.tsx             ← about page
+  servicios/page.tsx          ← services page
+  blog/page.tsx               ← blog listing (hardcoded hero)
+  blog/[slug]/page.tsx        ← blog post detail
+  contacto/page.tsx           ← contact page (hours hardcoded — see Known Gaps)
+  niveles/[id]/page.tsx       ← education level detail
+  sitemap.ts                  ← static sitemap (missing /niveles/* and blog slugs)
+
+components/
+  HeroStrapi.tsx              ← homepage hero — Strapi homepage fields
+  ServicesSection.tsx         ← services grid
+  AboutSection.tsx            ← about section
+  CTASection.tsx              ← call-to-action banner
+  TestimonialsSection.tsx     ← testimonials
+  ValuePropositionSection.tsx ← value propositions
+  NivelesSection.tsx          ← education levels grid
+  MasonryGallery.tsx          ← photo gallery (used inside NivelContent only)
+  Navbar.tsx / Footer.tsx / TopBar.tsx
+
+lib/
+  strapi.ts                   ← all Strapi fetch functions + getStrapiMedia()
+  api.ts                      ← blog/gallery fetchers with JSON fallback
+  types.ts                    ← TypeScript interfaces for all Strapi content types
+  site-config.ts              ← AUTO-GENERATED by sync-contact-info.js at build time
+  contact.ts                  ← getContactInfo() helper (Strapi → site-config fallback)
+  data.ts                     ← static nav links and service slugs
+
+data/
+  blog-posts.json             ← synced from Strapi by sync-blog-data.js
+  categories.json             ← synced from Strapi by sync-blog-data.js
+  niveles.ts                  ← static fallback for education levels
+
+scripts/
+  sync-contact-info.js        ← prebuild: fetches contact-page → writes lib/site-config.ts
+  sync-blog-data.js           ← prebuild: fetches blog posts + categories → data/*.json
+  download-strapi-images.js   ← prebuild: downloads Strapi uploads → public/strapi-images/
+  add-to-droplet.sh           ← deploy CMS to shared droplet (4 args)
+
+cms/
+  Dockerfile                  ← Node 22 Alpine + su-exec entrypoint (fixes upload perms)
+  docker-compose.shared.yml   ← multi-tenant compose — no Traefik, joins external network
+  docker-compose.local.yml    ← local dev with Traefik
+  src/index.ts                ← Strapi lifecycle hook → workflow_dispatch (8s debounce)
+  scripts/populate-strapi-v5.js  ← one-time seed script
+  scripts/fix-strapi-data.js     ← fix/migrate existing Strapi data
+
+lambda/
+  contact-form/               ← AWS Lambda for contact form (SES email + rate limiting)
+
+lambda-webhook/
+  index.js                    ← legacy: AWS Lambda → repository_dispatch (still works, no debounce)
+
+.github/workflows/
+  deploy-production.yml       ← push to main OR workflow_dispatch → build → S3 → CF
+  deploy-staging.yml          ← push to staging OR workflow_dispatch → staging build
+```
+
+---
+
+## Rules
+
+### Always use Strapi v5 endpoint format
+`/api/<type>?sort=field:asc&populate=*` — never the v3 format (`/services?_sort=order:ASC`).
+
+### Every Strapi fetch must have a fallback
+```typescript
+export async function getServices(): Promise<Service[]> {
+  try {
+    const res = await fetchAPI('/api/services?sort=order:asc&populate=*');
+    return res.data.map((d: any) => d.attributes ?? d);
+  } catch {
+    return SERVICES_FALLBACK; // hardcoded fallback — site never breaks
+  }
 }
 ```
 
----
+### Public read permissions — set after every new content type
+Settings → Roles & Permissions → Roles → Public → enable `find` + `findOne`
+API returns 403 without it. Run `populate-strapi-v5.js` to set automatically.
 
-## Part 3: Configure Route53 DNS
+### content-manager PUT saves as draft — publish separately
+A PUT to `/content-manager/collection-types/{uid}/{documentId}` saves as draft.
+Call `POST .../actions/publish` after. Same applies to single types.
 
-### Step 1: Create A Record for Root Domain
+### GitHub token — classic PAT only
+`ghp_` prefix only. Fine-grained tokens return 403 on `workflow_dispatch`.
+Scopes: `repo` + `workflow`.
 
-1. Go to **Route53** → **Hosted zones**
-2. Click on `vigotskyreynosa.edu.mx`
-3. Click **Create record**
+### Strapi CMD — always `npm run develop`
+Never `strapi start` — causes BigInt PostgreSQL errors in production builds.
 
-**Record 1 (Root domain):**
-- **Record name**: Leave empty (root domain)
-- **Record type**: A
-- **Alias**: Yes (toggle on)
-- **Route traffic to**:
-  - Alias to CloudFront distribution
-  - Select your CloudFront distribution
-- **Routing policy**: Simple routing
-- Click **Create records**
+### Static export constraints
+Keep `output: 'export'` and `images: { unoptimized: true }` in `next.config.ts`.
+No runtime API routes. `npm run build` must exit 0.
 
-### Step 2: Create A Record for www Subdomain
-
-1. Click **Create record** again
-
-**Record 2 (www subdomain):**
-- **Record name**: `www`
-- **Record type**: A
-- **Alias**: Yes
-- **Route traffic to**:
-  - Alias to CloudFront distribution
-  - Select your CloudFront distribution
-- Click **Create records**
-
----
-
-## Part 4: Create IAM User for GitHub Actions
-
-### Step 1: Create IAM User
-
-1. Go to **IAM** → **Users**
-2. Click **Create user**
-3. **User name**: `github-actions-deploy`
-4. Click **Next**
-5. **Permissions**: Attach policies directly
-6. Search and select:
-   - `AmazonS3FullAccess` (or create custom policy with limited access)
-   - `CloudFrontFullAccess` (or create custom policy)
-7. Click **Next**
-8. Click **Create user**
-
-### Step 2: Create Access Keys
-
-1. Click on the user you just created
-2. Go to **Security credentials** tab
-3. Scroll to **Access keys**
-4. Click **Create access key**
-5. Select **Application running outside AWS**
-6. Click **Next**
-7. Add description: `GitHub Actions deployment`
-8. Click **Create access key**
-9. **IMPORTANT**: Copy both:
-   - Access key ID (example: `AKIAIOSFODNN7EXAMPLE`)
-   - Secret access key (example: `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY`)
-   - You won't see the secret again!
-
-### Step 3: (Optional) Create Custom IAM Policy
-
-For better security, create a custom policy instead of full access:
-
-```json
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:PutObject",
-                "s3:GetObject",
-                "s3:DeleteObject",
-                "s3:ListBucket"
-            ],
-            "Resource": [
-                "arn:aws:s3:::vigotskyreynosa-website",
-                "arn:aws:s3:::vigotskyreynosa-website/*"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "cloudfront:CreateInvalidation",
-                "cloudfront:GetInvalidation"
-            ],
-            "Resource": "arn:aws:cloudfront::YOUR_ACCOUNT_ID:distribution/YOUR_DISTRIBUTION_ID"
-        }
-    ]
-}
+### Strapi date field types (TypeScript)
+```typescript
+createdAt?: string; updatedAt?: string; publishedAt?: string;
+created_at?: string; updated_at?: string; published_at?: string;
+documentId?: string;
 ```
 
 ---
 
-## Part 5: Configure GitHub Secrets
+## GitHub Actions secrets
 
-1. Go to your GitHub repository
-2. Click **Settings** → **Secrets and variables** → **Actions**
-3. Click **New repository secret** for each:
-
-**Secrets to add:**
-
-1. **NEXT_PUBLIC_STRAPI_URL**
-   - Value: `https://cms.vigotskyreynosa.edu.mx`
-
-2. **AWS_ACCESS_KEY_ID**
-   - Value: Your IAM access key ID from Part 4
-
-3. **AWS_SECRET_ACCESS_KEY**
-   - Value: Your IAM secret access key from Part 4
-
-4. **S3_BUCKET_NAME**
-   - Value: `vigotskyreynosa-website` (your bucket name)
-
-5. **CLOUDFRONT_DISTRIBUTION_ID**
-   - Value: Your CloudFront distribution ID (e.g., `E1234ABCDEFGH`)
-
-6. **AWS_REGION** (if different from us-east-1)
-   - Value: `us-east-1` (or your bucket region)
-
----
-
-## Part 6: Update GitHub Actions Workflow
-
-Make sure your `.github/workflows/deploy.yml` has the correct region:
-
-```yaml
-- name: Configure AWS credentials
-  uses: aws-actions/configure-aws-credentials@v4
-  with:
-    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    aws-region: us-east-1  # Change if your bucket is in different region
+```
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+S3_BUCKET_NAME                        ← production S3 bucket
+CLOUDFRONT_DISTRIBUTION_ID            ← production CloudFront
+STAGING_S3_BUCKET
+STAGING_CLOUDFRONT_DISTRIBUTION_ID
+STAGING_AWS_REGION
+NEXT_PUBLIC_STRAPI_URL=https://cms.vigotskyreynosa.edu.mx
+NEXT_PUBLIC_CONTACT_API_ENDPOINT      ← API Gateway URL (not yet set)
 ```
 
 ---
 
-## Part 7: Test the Setup
+## TODO
 
-### Step 1: Manual Deploy Test
-
-1. Commit and push your code to GitHub
-2. Go to GitHub → **Actions** tab
-3. You should see the workflow running
-4. Wait for it to complete (~5 minutes)
-
-### Step 2: Verify CloudFront
-
-1. Open CloudFront distribution domain (example: `d111111abcdef8.cloudfront.net`)
-2. You should see your website
-3. Open your custom domain: `https://vigotskyreynosa.edu.mx`
-4. You should see your website with valid SSL
-
-### Step 3: Check for Common Issues
-
-**Website shows 403 Forbidden:**
-- Check S3 bucket policy is correct
-- Verify CloudFront has OAC configured
-
-**Website shows old content:**
-- Check CloudFront invalidation ran successfully
-- Wait 5-10 minutes for cache to clear
-- Try hard refresh: Ctrl+F5 or Cmd+Shift+R
-
-**SSL certificate error:**
-- Make sure certificate is in us-east-1 region
-- Verify DNS validation completed
-- Wait a few minutes for CloudFront to pick up the certificate
-
-**404 errors on refresh:**
-- Add error pages configuration in CloudFront
-
----
-
-## Part 8: Configure CloudFront Error Pages (Next.js SPA)
-
-For proper Next.js routing:
-
-1. Go to CloudFront → Your distribution → **Error pages** tab
-2. Click **Create custom error response**
-
-**Error 403:**
-- HTTP error code: 403
-- Customize error response: Yes
-- Response page path: `/404.html`
-- HTTP response code: 404
-
-**Error 404:**
-- HTTP error code: 404
-- Customize error response: Yes
-- Response page path: `/404.html`
-- HTTP response code: 404
-
----
-
-## Summary Checklist
-
-✅ S3 bucket created
-✅ CloudFront distribution created
-✅ SSL certificate issued and validated
-✅ S3 bucket policy updated
-✅ Route53 DNS records created
-✅ IAM user created with access keys
-✅ GitHub secrets configured
-✅ GitHub Actions workflow updated
-✅ Test deployment successful
-✅ Custom domain working with HTTPS
-
----
-
-## Useful AWS CLI Commands
-
-Test S3 sync locally:
-```bash
-npm run build
-aws s3 sync out/ s3://vigotskyreynosa-website --delete --dryrun
-```
-
-Create CloudFront invalidation manually:
-```bash
-aws cloudfront create-invalidation \
-  --distribution-id E1234ABCDEFGH \
-  --paths "/*"
-```
-
----
-
-## Cost Estimate
-
-**S3 Storage:**
-- ~100MB site = $0.023/month
-
-**CloudFront:**
-- First 1TB/month = Free (first 12 months)
-- After: $0.085/GB
-
-**Route53:**
-- Hosted zone: $0.50/month
-- Queries: $0.40 per million
-
-**Total monthly cost:** ~$1-5/month for a typical school website
-
----
-
-## Support
-
-If you run into issues, check:
-- CloudFront distribution status is "Deployed"
-- SSL certificate status is "Issued"
-- S3 bucket policy allows CloudFront access
-- GitHub Actions logs for specific errors
+- [ ] **Phase 8** — Test full pipeline: publish something in Strapi admin → verify GitHub Actions triggers and live site updates
+- [ ] **Phase 9** — Replace all placeholder content with real school data (text, photos, staff info, actual hours)
+- [ ] **Phase 10** — Deploy contact form Lambda (`lambda/contact-form/`) + set `NEXT_PUBLIC_CONTACT_API_ENDPOINT` in GitHub secrets
+- [ ] **Phase 11** — Clean up old v3 Strapi postgres container on droplet: `docker stop strapi-db && docker rm strapi-db`
+- [ ] **Phase 11** — Train school staff on Strapi admin (publish blog posts, update services, upload images)
+- [ ] Fix sitemap — add `/niveles/*` and `/blog/<slug>` URLs to `app/sitemap.ts`
+- [ ] Fix contact page — pull `hours` from Strapi via `getContactInfo()` instead of hardcoding in `app/contacto/page.tsx`
+- [ ] Fix blog hero — create a `blog-page` single type in Strapi to drive the title and background image
+- [ ] Add gallery page — `/galeria` route using `MasonryGallery.tsx` + `getGalleries()`
+. 

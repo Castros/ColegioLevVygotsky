@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { EducationLevel } from "@/lib/types";
 import { getStrapiMedia } from "@/lib/strapi";
 import { FaCheck, FaGraduationCap, FaHeart, FaArrowRight } from "react-icons/fa";
@@ -51,9 +52,11 @@ const fallbackGalleries: Record<string, string[]> = {
 const fallbackHeroImages: Record<string, string> = {
   "pre-kinder": "/images/hero-kinder-bg.png",
   kinder: "/images/hero-kinder-bg.png",
-  primaria: "/images/hero-primaria-bg.jpg",
-  secundaria: "/images/hero-secundaria-bg.jpg",
+  primaria: "/images/kid-working.jpeg",
+  secundaria: "/images/girl-learning.jpg",
 };
+
+const defaultFallbackImage = "/images/afuera-de-escuela.png";
 
 // Content specific to each nivel (keyed by slug)
 const nivelData: Record<string, {
@@ -240,7 +243,7 @@ export default function NivelContent({ nivel }: NivelContentProps) {
   const heroImage =
     (nivel.image?.url ? getStrapiMedia(nivel.image.url) : null) ||
     fallbackHeroImages[nivel.slug] ||
-    "/images/placeholder.jpg";
+    defaultFallbackImage;
 
   return (
     <div>
@@ -260,7 +263,7 @@ export default function NivelContent({ nivel }: NivelContentProps) {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 py-20 w-full">
-          <div className="max-w-3xl">
+          <div className="max-w-3xl" data-reveal="fade">
             <p className="text-green-200 text-sm md:text-base font-semibold tracking-wider mb-4 uppercase">
               {nivel.ageRange}
             </p>
@@ -270,7 +273,7 @@ export default function NivelContent({ nivel }: NivelContentProps) {
             <p className="text-white/90 text-lg md:text-xl leading-relaxed mb-8">
               {nivel.description}
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4" data-reveal="item" style={{ "--reveal-delay": "120ms" } as CSSProperties}>
               <Link
                 href="/contacto"
                 className="inline-flex items-center gap-2 bg-white text-green-700 px-8 py-4 rounded-full font-bold hover:bg-green-50 transition text-lg shadow-lg"
@@ -293,7 +296,8 @@ export default function NivelContent({ nivel }: NivelContentProps) {
         <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <FaHeart className="text-green-600 text-5xl mx-auto mb-6" />
+              <FaHeart className="text-green-600 text-5xl mx-auto mb-6" data-reveal="scale" />
+              <div data-reveal="fade">
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
                 {data.promise}
               </h2>
@@ -301,6 +305,7 @@ export default function NivelContent({ nivel }: NivelContentProps) {
               <p className="text-xl text-slate-700 leading-relaxed">
                 {data.promiseDescription}
               </p>
+              </div>
             </div>
           </div>
         </section>
@@ -310,7 +315,7 @@ export default function NivelContent({ nivel }: NivelContentProps) {
       {data && (
         <section className="py-20 bg-slate-50">
           <div className="max-w-7xl mx-auto px-4">
-            <div className="text-center mb-12">
+            <div className="text-center mb-12" data-reveal="fade">
               <FaGraduationCap className="text-green-600 text-5xl mx-auto mb-6" />
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
                 Áreas de Desarrollo
@@ -327,6 +332,8 @@ export default function NivelContent({ nivel }: NivelContentProps) {
                   <div
                     key={index}
                     className="flex items-start gap-4 border-l-4 border-green-600 pl-6 py-2"
+                    data-reveal="item"
+                    style={{ "--reveal-delay": `${Math.min(index * 60, 240)}ms` } as CSSProperties}
                   >
                     <div className="flex-1">
                       <h3 className="text-slate-900 font-bold text-xl mb-2">{area.title}</h3>
@@ -356,14 +363,14 @@ export default function NivelContent({ nivel }: NivelContentProps) {
           <div className="max-w-7xl mx-auto px-4">
             <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
               {/* Left side - Large Icon */}
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0" data-reveal="slide-right">
                 <div className="w-64 h-64 lg:w-80 lg:h-80 bg-gradient-to-br from-green-600 to-green-800 rounded-3xl flex items-center justify-center shadow-2xl">
                   <FaGraduationCap className="text-white text-8xl lg:text-9xl" />
                 </div>
               </div>
 
               {/* Right side - Content */}
-              <div className="flex-1">
+              <div className="flex-1" data-reveal="slide-left">
                 <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
                   Lo Que Su Hijo Logrará
                 </h2>
@@ -374,7 +381,12 @@ export default function NivelContent({ nivel }: NivelContentProps) {
 
                 <div className="space-y-5">
                   {data.outcomes.map((outcome, index) => (
-                    <div key={index} className="flex items-start gap-4">
+                    <div
+                      key={index}
+                      className="flex items-start gap-4"
+                      data-reveal="item"
+                      style={{ "--reveal-delay": `${Math.min(index * 60, 240)}ms` } as CSSProperties}
+                    >
                       <div className="flex-shrink-0 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
                         <FaCheck className="text-white text-sm" />
                       </div>
@@ -392,8 +404,8 @@ export default function NivelContent({ nivel }: NivelContentProps) {
       {data && (
         <section className="py-20 bg-white">
           <div className="max-w-4xl mx-auto px-4">
-            <div className="bg-gradient-to-br from-green-700 to-green-900 rounded-3xl p-8 md:p-12 text-white">
-              <div className="text-6xl mb-6 opacity-50">"</div>
+            <div className="bg-gradient-to-br from-green-700 to-green-900 rounded-3xl p-8 md:p-12 text-white" data-reveal="scale">
+              <div className="text-6xl mb-6 opacity-50">&quot;</div>
               <p className="text-xl md:text-2xl leading-relaxed mb-8 italic">
                 {data.testimonial.text}
               </p>
@@ -408,7 +420,7 @@ export default function NivelContent({ nivel }: NivelContentProps) {
 
       {/* Final CTA */}
       <section className="py-20 bg-slate-900 text-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className="max-w-4xl mx-auto px-4 text-center" data-reveal="fade">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Dé el Primer Paso Hoy
           </h2>

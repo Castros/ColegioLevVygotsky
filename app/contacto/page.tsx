@@ -20,7 +20,7 @@ export default function ContactPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 relative">
         {/* Header */}
-        <header className="text-center mb-12 lg:mb-16">
+        <header className="text-center mb-12 lg:mb-16" data-reveal="fade">
           <p className="text-green-600 font-medium mb-2">Contáctanos</p>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900">
             Estamos Aquí Para Ti
@@ -33,12 +33,12 @@ export default function ContactPage() {
         {/* Main Content Grid */}
         <main className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 mb-16 lg:mb-24">
           {/* Contact Form - Left Side (3/5) */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3" data-reveal="slide-right">
             <ContactForm />
           </div>
 
           {/* Contact Info - Right Side (2/5) */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2" data-reveal="slide-left">
             <div className="bg-slate-50 p-6 rounded-2xl shadow-sm lg:mt-16">
               <div className="space-y-6">
                 {/* Phone */}
@@ -125,7 +125,7 @@ export default function ContactPage() {
         </main>
 
         {/* Map Section - Inside Container */}
-        <section className="mb-16">
+        <section className="mb-16" data-reveal="fade">
           <div className="w-full h-[400px] rounded-2xl overflow-hidden shadow-lg">
             <iframe
               src={siteConfig.maps.embedUrl}

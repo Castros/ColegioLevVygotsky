@@ -41,33 +41,35 @@ export default function Navbar() {
         {/* Desktop Nav */}
         <nav className="hidden md:flex flex-1 justify-center gap-8 items-center">
           {navLinks.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="text-md font-semibold text-slate-700 hover:text-green-700 transition"
-            >
-              {l.label}
-            </Link>
-          ))}
+            <div key={l.href} className="contents">
+              <Link
+                href={l.href}
+                className="text-md font-semibold text-slate-700 hover:text-green-700 transition"
+              >
+                {l.label}
+              </Link>
 
-          {/* Niveles Dropdown */}
-          <div className="relative group">
-            <button className="text-md font-semibold text-slate-700 hover:text-green-700 transition flex items-center gap-1">
-              Niveles
-              <FaChevronDown className="w-3 h-3" />
-            </button>
-            <div className="absolute left-0 mt-2 w-56 bg-white shadow-xl rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border-t-4 border-green-600">
-              {niveles.map((nivel, index) => (
-                <Link
-                  key={nivel.id}
-                  href={`/niveles/${nivel.id}`}
-                  className={`block px-4 py-3 hover:bg-green-50 hover:text-green-700 text-slate-700 transition font-medium ${index === 0 ? 'rounded-t-lg' : ''} ${index === niveles.length - 1 ? 'rounded-b-lg' : ''}`}
-                >
-                  {nivel.name}
-                </Link>
-              ))}
+              {l.href === "/acerca" && (
+                <div className="relative group">
+                  <button className="text-md font-semibold text-slate-700 hover:text-green-700 transition flex items-center gap-1">
+                    Niveles
+                    <FaChevronDown className="w-3 h-3" />
+                  </button>
+                  <div className="absolute left-0 mt-2 w-56 bg-white shadow-xl rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border-t-4 border-green-600">
+                    {niveles.map((nivel, index) => (
+                      <Link
+                        key={nivel.id}
+                        href={`/niveles/${nivel.id}`}
+                        className={`block px-4 py-3 hover:bg-green-50 hover:text-green-700 text-slate-700 transition font-medium ${index === 0 ? 'rounded-t-lg' : ''} ${index === niveles.length - 1 ? 'rounded-b-lg' : ''}`}
+                      >
+                        {nivel.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
+          ))}
         </nav>
 
         {/* Desktop CTA */}
@@ -96,40 +98,42 @@ export default function Navbar() {
             {/* Links */}
             <div className="overflow-y-auto p-4 flex flex-col gap-4">
               {navLinks.map((l) => (
+                <div key={l.href}>
                 <Link
-                  key={l.href}
                   href={l.href}
                   onClick={() => setOpen(false)}
-                  className="text-base font-semibold text-slate-800 active:text-green-700 py-2 px-2 rounded-lg active:bg-green-50 transition"
+                  className="block text-base font-semibold text-slate-800 active:text-green-700 py-2 px-2 rounded-lg active:bg-green-50 transition"
                 >
                   {l.label}
                 </Link>
-              ))}
 
-              {/* Niveles Mobile Dropdown */}
-              <div>
-                <button
-                  onClick={() => setNivelesOpen(!nivelesOpen)}
-                  className="w-full flex items-center justify-between text-base font-semibold text-slate-800 py-2 px-2 rounded-lg active:bg-green-50 transition"
-                >
-                  Niveles
-                  <FaChevronDown className={`w-3 h-3 transform transition ${nivelesOpen ? 'rotate-180' : ''}`} />
-                </button>
-                {nivelesOpen && (
-                  <div className="ml-4 mt-2 space-y-2">
-                    {niveles.map((nivel) => (
-                      <Link
-                        key={nivel.id}
-                        href={`/niveles/${nivel.id}`}
-                        onClick={() => setOpen(false)}
-                        className="block py-2 px-3 text-sm text-slate-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition"
+                  {l.href === "/acerca" && (
+                    <div className="mt-4">
+                      <button
+                        onClick={() => setNivelesOpen(!nivelesOpen)}
+                        className="w-full flex items-center justify-between text-base font-semibold text-slate-800 py-2 px-2 rounded-lg active:bg-green-50 transition"
                       >
-                        {nivel.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+                        Niveles
+                        <FaChevronDown className={`w-3 h-3 transform transition ${nivelesOpen ? 'rotate-180' : ''}`} />
+                      </button>
+                      {nivelesOpen && (
+                        <div className="ml-4 mt-2 space-y-2">
+                          {niveles.map((nivel) => (
+                            <Link
+                              key={nivel.id}
+                              href={`/niveles/${nivel.id}`}
+                              onClick={() => setOpen(false)}
+                              className="block py-2 px-3 text-sm text-slate-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition"
+                            >
+                              {nivel.name}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
 
             {/* CTA at bottom */}
