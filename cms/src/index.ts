@@ -24,6 +24,11 @@ export default {
               <p>Has sido invitado/a a gestionar el contenido del sitio web de Colegio Lev Vygotsky.</p>
               <p><a href="${link}" style="background:#4945ff;color:#fff;padding:10px 20px;border-radius:4px;text-decoration:none;">Activar mi cuenta</a></p>
               <p>O copia este enlace en tu navegador:<br/>${link}</p>
+              <p>
+                ¿No sabes por dónde empezar? Consulta la
+                <a href="https://drive.google.com/file/d/1F7ET2ob2oUtje9jwF2vgIrWXNjyvPhGT/view?usp=sharing" style="color:#4945ff;">Guía de Administración de Contenido</a>
+                para aprender a publicar y actualizar el sitio paso a paso.
+              </p>
               <p>Este enlace es de uso único. Si no esperabas este correo, puedes ignorarlo.</p>
             `,
           });
