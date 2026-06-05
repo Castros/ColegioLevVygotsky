@@ -29,7 +29,7 @@ export const siteConfig = {
   },
 
   social: {
-    facebook: 'https://www.facebook.com/profile.php?id=100063574022481',
+    facebook: 'https://www.facebook.com/colegiolevvygotskyreynosa',
     instagram: 'https://www.instagram.com/colegiolevvygotsky1/',
     whatsapp: undefined,
   },
